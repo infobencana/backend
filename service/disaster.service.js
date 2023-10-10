@@ -77,6 +77,10 @@ async function updateDisasterById(disasterId, updateFields, file) {
   return await disasterRepository.updateDisasterById(disasterId, validUpdateFields);
 }
 
+async function deletePeopleGone(disasterId, personId) {
+  return await disasterRepository.deletePeopleGone(disasterId, personId);
+}
+
 module.exports = {
   publishDisaster,
   getListDisaster,
@@ -85,4 +89,5 @@ module.exports = {
   getDisasterById,
   deleteDisasterById,
   updateDisasterById,
+  deletePeopleGone,
 };

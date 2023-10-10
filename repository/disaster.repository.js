@@ -83,6 +83,24 @@ async function updateDisasterById(disasterId, updateFields) {
   return data;
 }
 
+async function deletePeopleGone(disasterId, personId) {
+  const disaster = await Disaster.findById(disasterId);
+  if (!disaster) {
+    throw new Error("Disaster not found");
+  }
+
+  const person = disaster.people_gone.id(personId);
+  if (!person) {
+    throw new Error("Person not found");
+  }
+
+  // Instead of person.remove(), use the following to remove the person:
+  disaster.people_gone.pull({ _id: personId });
+
+  await disaster.save();
+  return disaster;
+}
+
 module.exports = {
   addDisaster,
   getListDisaster,
@@ -91,4 +109,5 @@ module.exports = {
   getDisasterById,
   deleteDisasterById,
   updateDisasterById,
+  deletePeopleGone,
 };

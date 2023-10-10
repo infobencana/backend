@@ -142,3 +142,17 @@ module.exports.UpdateDisaster = async (req, res) => {
       .json({ status: false, message: "Internal server error." });
   }
 }
+
+
+// Please make delete missing people or people gone in disaster.controller.js
+module.exports.DeletePeopleGone = async (req, res) => {
+  try {
+    logger.info("Deleting missing people::", req.params);
+    const peopleGone = await disasterService.deletePeopleGone(req.params.disasterId, req.params.id); // Call the correct function
+    // Respond with a success message
+    res.status(200).json({ message: "Person successfully deleted", data: peopleGone });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+  

@@ -5,6 +5,7 @@ const {
   DeleteDisaster,
   UpdateDisaster,
   // UpdatePeopleGone,
+  DeletePeopleGone
 } = require("../controller/disaster.controller");
 
 const router = require("express").Router();
@@ -19,4 +20,7 @@ router.delete("/:disasterId", DeleteDisaster);
 router.put("/:disasterId", uploadPicture, UpdateDisaster);
 router.post("/:disasterId/people_gone", AddPeopleGone);
 // router.put("/:disasterId/people_gone/:personId", UpdatePeopleGone);
+// Delete People Gone
+router.delete("/:disasterId/people_gone/:id", DeletePeopleGone);
+
 module.exports = router;
