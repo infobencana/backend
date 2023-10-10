@@ -143,7 +143,6 @@ module.exports.UpdateDisaster = async (req, res) => {
   }
 }
 
-
 // Please make delete missing people or people gone in disaster.controller.js
 module.exports.DeletePeopleGone = async (req, res) => {
   try {
@@ -155,4 +154,3 @@ module.exports.DeletePeopleGone = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 }
-  
