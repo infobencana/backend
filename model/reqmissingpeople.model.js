@@ -39,7 +39,7 @@ const reqMissingPeopleSchema = new mongoose.Schema(
   },
   {
     versionKey: false, // Hide the __v field
-  }
+  },
 );
 
 module.exports = mongoose.model("ReqMissingPeople", reqMissingPeopleSchema);

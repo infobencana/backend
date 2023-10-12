@@ -21,7 +21,7 @@ router.post(
   verifyToken,
   validateCreateMissingPeople,
   handleValidationErrors,
-  createMissingPeople
+  createMissingPeople,
 );
 router.get("", verifyToken, getMissingPeople);
 router.get("/:id", verifyToken, getMissingPeopleById);
@@ -31,7 +31,7 @@ router.post(
   "/update-people-gone",
   verifyToken,
   validateUpdatePeopleGone,
-  updatePeopleGoneInDisaster
+  updatePeopleGoneInDisaster,
 );
 
 module.exports = router;

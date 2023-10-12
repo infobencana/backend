@@ -57,10 +57,14 @@ async function addPeopleGone(disasterId, peopleData) {
 }
 
 async function updatePeopleGone(disasterId, personId, updateFields) {
-  return await disasterRepository.updatePeopleGone(disasterId, personId, updateFields);
+  return await disasterRepository.updatePeopleGone(
+    disasterId,
+    personId,
+    updateFields,
+  );
 }
 
-async function getDisasterById(disasterId) { 
+async function getDisasterById(disasterId) {
   return await disasterRepository.getDisasterById(disasterId);
 }
 
@@ -72,9 +76,12 @@ async function updateDisasterById(disasterId, updateFields, file) {
   const { people_gone, discuss, ...validUpdateFields } = updateFields;
   if (file) {
     const pictureUrl = await uploadImageDisaster(file);
-    validUpdateFields.picture = pictureUrl
+    validUpdateFields.picture = pictureUrl;
   }
-  return await disasterRepository.updateDisasterById(disasterId, validUpdateFields);
+  return await disasterRepository.updateDisasterById(
+    disasterId,
+    validUpdateFields,
+  );
 }
 
 async function deletePeopleGone(disasterId, personId) {

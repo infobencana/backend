@@ -97,7 +97,7 @@ const disasterSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  victim : {
+  victim: {
     type: Number,
     required: false,
     default: 0,

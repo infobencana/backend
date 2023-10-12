@@ -52,6 +52,31 @@ module.exports.GetListDisaster = async (req, res) => {
   }
 };
 
+module.exports.GetDisasterById = async (req, res) => {
+  try {
+    const { disasterId } = req.params;
+    const existingDisaster = await disasterService.getDisasterById(disasterId);
+
+    if (!existingDisaster) {
+      return res
+        .status(400)
+        .json({
+          status: false,
+          message: "Disaster not found",
+        });
+    } else {
+      res.status(200).json({
+        message: "OK",
+        success: true,
+        data: existingDisaster,
+      });
+    }
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ status: false, message: "Internal server error." });
+  }
+}
+
 // Missing People = people_gone
 module.exports.UpdateMissingPeople = async (req, res) => {
   try {

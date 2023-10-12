@@ -1,6 +1,7 @@
 const {
   AddDisaster,
   GetListDisaster,
+  GetDisasterById,
   AddPeopleGone,
   DeleteDisaster,
   UpdateDisaster,
@@ -16,6 +17,7 @@ const {
 
 router.post("", uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", GetListDisaster);
+router.get("/:disasterId", GetDisasterById);
 router.delete("/:disasterId", DeleteDisaster);
 router.put("/:disasterId", uploadPicture, UpdateDisaster);
 router.post("/:disasterId/people_gone", AddPeopleGone);
