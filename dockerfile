@@ -1,19 +1,22 @@
-# Gunakan node.js versi yang diinginkan sebagai base image
-FROM node:14-slim
+# Use the desired version of Node.js as the base image
+FROM node:16-slim
 
-# Set direktori kerja di dalam container
+# Install pnpm
+RUN npm install -g pnpm
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Salin package.json dan package-lock.json (jika ada) ke dalam container
-COPY package*.json ./
+# Copy package.json and pnpm-lock.yaml (if any) into the container
+COPY package.json ./
 
-# Install dependensi npm
-RUN npm install
+# Install dependencies using pnpm
+RUN pnpm install
 
-# Salin kode aplikasi Anda ke dalam container
+# Copy your application code into the container
 COPY . .
 
-# Port yang akan digunakan oleh Express.js
+# Port used by Express.js
 EXPOSE 8080
 
-CMD ["node", "app.js"]
+CMD ["pnpm", "start"]
