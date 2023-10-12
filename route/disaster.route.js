@@ -1,11 +1,12 @@
 const {
   AddDisaster,
   GetListDisaster,
+  GetDisasterById,
   AddPeopleGone,
   DeleteDisaster,
   UpdateDisaster,
   // UpdatePeopleGone,
-  DeletePeopleGone,
+  DeletePeopleGone
 } = require("../controller/disaster.controller");
 
 const router = require("express").Router();
@@ -16,6 +17,7 @@ const {
 
 router.post("", uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", GetListDisaster);
+router.get("/:disasterId", GetDisasterById);
 router.delete("/:disasterId", DeleteDisaster);
 router.put("/:disasterId", uploadPicture, UpdateDisaster);
 router.post("/:disasterId/people_gone", AddPeopleGone);
