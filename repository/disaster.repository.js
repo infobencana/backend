@@ -65,7 +65,7 @@ async function getDisasterById(disasterId) {
   }
 }
 
-async function deleteDisasterById(disasterId){
+async function deleteDisasterById(disasterId) {
   try {
     return await Disaster.findByIdAndDelete(disasterId);
   } catch (error) {
@@ -76,7 +76,9 @@ async function deleteDisasterById(disasterId){
 async function updateDisasterById(disasterId, updateFields) {
   let data = {};
   try {
-    data = await Disaster.findByIdAndUpdate(disasterId, updateFields, { new: true });
+    data = await Disaster.findByIdAndUpdate(disasterId, updateFields, {
+      new: true,
+    });
   } catch (error) {
     logger.error(error.message);
   }

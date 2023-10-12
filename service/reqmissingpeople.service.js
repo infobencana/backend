@@ -20,5 +20,5 @@ module.exports = {
   createMissingPeople,
   getMissingPeople,
   getMissingPeopleById,
-  deleteMissingPeopleById
+  deleteMissingPeopleById,
 };

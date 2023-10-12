@@ -22,15 +22,15 @@ app.listen(PORT, () => {
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", 
-      "http://localhost:4000", 
+      "http://localhost:5173",
+      "http://localhost:4000",
       "https://infobencana.netlify.app",
-      "https://gigih-backend-hhoivlttoa-et.a.run.app"
+      "https://gigih-backend-hhoivlttoa-et.a.run.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     // credentials: true,
     // exposedHeaders: ["set-cookie"],
-  })
+  }),
 );
 // app.use(cookieParser());
 

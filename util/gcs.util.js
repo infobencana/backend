@@ -47,7 +47,7 @@ const uploadImageProfile = async (file, sanitizedEmail) => {
   return new Promise((resolve, reject) => {
     blobStream.on("finish", () => {
       const publicUrl = util.format(
-        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+        `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
       );
       resolve(publicUrl);
     });
@@ -77,7 +77,7 @@ const uploadImageDisaster = async (file) => {
   await blobStream.end();
 
   const publicUrl = util.format(
-    `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+    `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
   );
 
   return publicUrl;

@@ -1,7 +1,7 @@
-const { isValid } = require('date-fns');
+const { isValid } = require("date-fns");
 
 exports.validateInputDisaster = (req, res, next) => {
-  const { name, place, detail} = req.body;
+  const { name, place, detail } = req.body;
 
   if (!name) {
     return res
@@ -10,9 +10,10 @@ exports.validateInputDisaster = (req, res, next) => {
   }
 
   if (!isValid(new Date(detail.date))) {
-    return res
-      .status(400)
-      .json({ status: false, message: "Invalid date format, please use ISO 8601" });
+    return res.status(400).json({
+      status: false,
+      message: "Invalid date format, please use ISO 8601",
+    });
   }
 
   if (!detail.type) {

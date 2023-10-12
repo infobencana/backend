@@ -103,7 +103,7 @@ module.exports.UpdateProfile = async (req, res) => {
     const updatedUser = await userService.updateProfile(
       _id,
       updateFields,
-      req.file
+      req.file,
     );
     return res
       .status(200)

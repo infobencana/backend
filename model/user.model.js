@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     versionKey: false, // Hide the __v field
-  }
+  },
 );
 
 userSchema.pre("save", async function () {

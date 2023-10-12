@@ -88,7 +88,7 @@ async function addMissingPeopleFromDisaster(req, res) {
 
     // Find missingPeople based on missing_people_id
     const missingPeople = disaster.people_gone.find(
-      (person) => person._id.toString() === missing_people_id
+      (person) => person._id.toString() === missing_people_id,
     );
 
     if (!missingPeople) {
@@ -149,7 +149,7 @@ async function updatePeopleGoneInDisaster(req, res) {
         age: missingPeople.age,
         address: missingPeople.address,
         last_seen: missingPeople.last_seen,
-      }
+      },
     );
 
     res

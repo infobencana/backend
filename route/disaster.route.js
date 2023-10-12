@@ -5,7 +5,7 @@ const {
   DeleteDisaster,
   UpdateDisaster,
   // UpdatePeopleGone,
-  DeletePeopleGone
+  DeletePeopleGone,
 } = require("../controller/disaster.controller");
 
 const router = require("express").Router();
