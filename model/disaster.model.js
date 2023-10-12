@@ -29,6 +29,11 @@ const peopleGoneSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  gender: {
+    type: String,
+    required: false,
+    default: "",
+  },
   weight: {
     type: String,
     required: false,
@@ -81,6 +86,10 @@ const disasterSchema = new mongoose.Schema({
   },
   detail: {
     type: {
+      type: String,
+      required: true,
+    },
+    status: {
       type: String,
       required: true,
     },

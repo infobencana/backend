@@ -6,13 +6,6 @@ module.exports.Signup = async (req, res) => {
     logger.info("Signup::", req.body);
     const userData = req.body;
     const { token } = await userService.signupUser(userData);
-    // res.cookie("token", token, {
-    //   withCredentials: true,
-    //   httpOnly: false,
-    //   sameSite: "none",
-    //   secure: true,
-    //   expires: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)),
-    // });
     res.status(201).json({
       message: "User signed in successfully",
       status: true,
@@ -36,13 +29,6 @@ module.exports.Login = async (req, res) => {
     const { email, password } = req.body;
     logger.info("Login as ::", email);
     const token = await userService.loginUser(email, password);
-    // res.cookie("token", token, {
-    //   withCredentials: true,
-    //   httpOnly: false,
-    //   sameSite: "none",
-    //   secure: true,
-    //   expires: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)),
-    // });
     res.status(201).json({
       message: "User logged in successfully",
       status: true,
@@ -61,20 +47,6 @@ module.exports.Login = async (req, res) => {
   }
 };
 
-module.exports.Logout = async (req, res) => {
-  try {
-    logger.info("Logout::", req.user.full_name);
-    res.clearCookie("token", { withCredentials: true });
-    return res
-      .status(200)
-      .json({ status: true, message: "User logged out successfully" });
-  } catch (error) {
-    logger.error(error.message);
-    return res
-      .status(500)
-      .json({ status: false, message: "Internal server error." });
-  }
-};
 
 module.exports.Profile = async (req, res) => {
   try {

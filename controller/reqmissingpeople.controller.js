@@ -71,6 +71,8 @@ async function addMissingPeopleFromDisaster(req, res) {
     const {
       bencana_id,
       missing_people_id,
+      name,
+      gender,
       status,
       weight,
       height,
@@ -97,9 +99,10 @@ async function addMissingPeopleFromDisaster(req, res) {
 
     // Create an object to hold the missing people data
     const missingPeopleData = {
-      name: missingPeople.name,
+      name: name || missingPeople.name,
       bencana_id: disaster._id,
       missing_people_id: missingPeople._id,
+      gender: gender || missingPeople.gender,
       status: status || missingPeople.status,
       weight: weight || missingPeople.weight,
       height: height || missingPeople.height,
@@ -143,6 +146,7 @@ async function updatePeopleGoneInDisaster(req, res) {
       missingPeople.missing_people_id,
       {
         name: missingPeople.name,
+        gender: missingPeople.gender,
         status: missingPeople.status,
         weight: missingPeople.weight,
         height: missingPeople.height,

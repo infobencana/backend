@@ -7,7 +7,7 @@ require("dotenv").config();
 const authRoute = require("./route/auth.route.js");
 const disasterRoute = require("./route/disaster.route.js");
 const missingPeopleRoute = require("./route/reqmissingpeople.route.js");
-const { MONGO_URL, PORT } = process.env;
+const { PORT } = process.env;
 // x-www-form-urlencoded
 const bodyParser = require("body-parser");
 const { connect } = require("./config/db.config.js");

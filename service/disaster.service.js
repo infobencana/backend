@@ -60,7 +60,7 @@ async function updatePeopleGone(disasterId, personId, updateFields) {
   return await disasterRepository.updatePeopleGone(
     disasterId,
     personId,
-    updateFields,
+    updateFields
   );
 }
 
@@ -80,7 +80,7 @@ async function updateDisasterById(disasterId, updateFields, file) {
   }
   return await disasterRepository.updateDisasterById(
     disasterId,
-    validUpdateFields,
+    validUpdateFields
   );
 }
 

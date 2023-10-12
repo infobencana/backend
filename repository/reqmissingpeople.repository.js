@@ -37,16 +37,16 @@ async function deleteMissingPeopleById(id) {
   }
 }
 
-async function updateMissingPeople(id, updateFields) {
-  try {
-    return await MissingPeople.findByIdAndUpdate(id, updateFields, {
-      new: true,
-    });
-  } catch (error) {
-    logger.error(error.message);
-    throw error;
-  }
-}
+// async function updateMissingPeople(id, updateFields) {
+//   try {
+//     return await MissingPeople.findByIdAndUpdate(id, updateFields, {
+//       new: true,
+//     });
+//   } catch (error) {
+//     logger.error(error.message);
+//     throw error;
+//   }
+// }
 
 // Export the repository functions
 module.exports = {

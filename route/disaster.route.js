@@ -21,7 +21,6 @@ router.get("/:disasterId", GetDisasterById);
 router.delete("/:disasterId", DeleteDisaster);
 router.put("/:disasterId", uploadPicture, UpdateDisaster);
 router.post("/:disasterId/people_gone", AddPeopleGone);
-// router.put("/:disasterId/people_gone/:personId", UpdatePeopleGone);
 // Delete People Gone
 router.delete("/:disasterId/people_gone/:id", DeletePeopleGone);
 
