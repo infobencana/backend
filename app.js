@@ -21,7 +21,12 @@ app.listen(PORT, () => {
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://infobencana.vercel.app" ,"http://localhost:4000", "https://gigih-backend-hhoivlttoa-et.a.run.app"],
+    origin: [
+      "http://localhost:5173", 
+      "http://localhost:4000", 
+      "https://infobencana.netlify.app",
+      "https://gigih-backend-hhoivlttoa-et.a.run.app"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     // credentials: true,
     // exposedHeaders: ["set-cookie"],
