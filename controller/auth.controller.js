@@ -6,10 +6,16 @@ module.exports.Signup = async (req, res) => {
     logger.info("Signup::", req.body);
     const userData = req.body;
     const { token } = await userService.signupUser(userData);
-    res.cookie("token", token, { withCredentials: true, httpOnly: false });
+    // res.cookie("token", token, {
+    //   withCredentials: true,
+    //   httpOnly: false,
+    //   sameSite: "none",
+    //   secure: true,
+    //   expires: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)),
+    // });
     res.status(201).json({
       message: "User signed in successfully",
-      success: true,
+      status: true,
       data: { token: token },
     });
   } catch (error) {
@@ -30,10 +36,16 @@ module.exports.Login = async (req, res) => {
     const { email, password } = req.body;
     logger.info("Login as ::", email);
     const token = await userService.loginUser(email, password);
-    res.cookie("token", token, { withCredentials: true, httpOnly: false });
+    // res.cookie("token", token, {
+    //   withCredentials: true,
+    //   httpOnly: false,
+    //   sameSite: "none",
+    //   secure: true,
+    //   expires: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)),
+    // });
     res.status(201).json({
       message: "User logged in successfully",
-      success: true,
+      status: true,
       data: { token: token },
     });
   } catch (error) {

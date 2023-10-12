@@ -11,7 +11,7 @@ module.exports.AddDisaster = async (req, res) => {
     );
     res.status(200).json({
       message: "Disaster added",
-      success: true,
+      status: true,
       data: disaster,
     });
   } catch (error) {
@@ -62,9 +62,9 @@ module.exports.UpdateMissingPeople = async (req, res) => {
       id,
       updateFields
     );
-    res.status(200).json(missingPeople);
+    res.status(200).json({ message: "OK", status: true, data: missingPeople});
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: false, message: "Internal server error."});
   }
 }
 
@@ -74,9 +74,9 @@ module.exports.AddPeopleGone = async (req, res) => {
     const { disasterId } = req.params;
     const peopleData = req.body;
     const disaster = await disasterService.addPeopleGone(disasterId, peopleData);
-    res.status(200).json(disaster);
+    res.status(200).json({message: "OK", status: true, data: disaster});
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: false, message: "Internal server error."});
   }
 }
 
@@ -149,8 +149,8 @@ module.exports.DeletePeopleGone = async (req, res) => {
     logger.info("Deleting missing people::", req.params);
     const peopleGone = await disasterService.deletePeopleGone(req.params.disasterId, req.params.id); // Call the correct function
     // Respond with a success message
-    res.status(200).json({ message: "Person successfully deleted", data: peopleGone });
+    res.status(200).json({ status: true, message: "Person successfully deleted", data: peopleGone });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ status: false, message: "Internal server error." });
   }
 }
