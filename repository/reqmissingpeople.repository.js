@@ -54,5 +54,5 @@ module.exports = {
   findMissingPeople,
   findMissingPeopleById,
   deleteMissingPeopleById,
-  updateMissingPeople,
+  // updateMissingPeople,
 };

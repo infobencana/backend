@@ -18,7 +18,6 @@ const {
 
 router.post("/signup", validateSignup, handleValidationErrors, Signup);
 router.post("/login", validateLogin, handleValidationErrors, Login);
-router.post("/logout", verifyToken, Logout);
 router.put("/profile", verifyToken, uploadPhotoProfile, UpdateProfile);
 router.get("/profile", verifyToken, Profile);
 
