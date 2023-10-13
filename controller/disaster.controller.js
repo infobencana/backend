@@ -135,6 +135,7 @@ module.exports.AddPeopleGone = async (req, res) => {
     const disaster = await disasterService.addPeopleGone(disasterId, peopleData);
     res.status(200).json({message: "OK", status: true, data: disaster});
   } catch (error) {
+    logger.error(error.message);
     res.status(500).json({ status: false, message: "Internal server error."});
   }
 }
@@ -145,6 +146,7 @@ module.exports.DeletePeopleGone = async (req, res) => {
     const peopleGone = await disasterService.deletePeopleGone(req.params.disasterId, req.params.id);
     res.status(200).json({ status: true, message: "Person successfully deleted", data: peopleGone });
   } catch (error) {
+    logger.error(error.message);
     return res.status(500).json({ status: false, message: "Internal server error." });
   }
 }

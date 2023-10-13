@@ -11,7 +11,6 @@ const validateCreateMissingPeople = [
 ];
 
 const validateUpdatePeopleGone = [
-  validateRequestBody(reqMissingPeopleModel),
   body("reqMissingPeopleId")
     .notEmpty()
     .withMessage("reqMissingPeopleId is required"),

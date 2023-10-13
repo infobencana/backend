@@ -16,21 +16,15 @@ const {
   handleValidationErrors,
 } = require("../middleware/validation.middleware");
 
-router.post(
-  "",
-  verifyToken,
-  validateCreateMissingPeople,
-  handleValidationErrors,
-  createMissingPeople,
-);
 router.get("", verifyToken, getMissingPeople);
 router.get("/:id", verifyToken, getMissingPeopleById);
 router.delete("/:id", verifyToken, deleteMissingPeople);
-router.post("/add-from-disaster", verifyToken, addMissingPeopleFromDisaster);
+router.post("/add-from-disaster", verifyToken, validateCreateMissingPeople, handleValidationErrors, addMissingPeopleFromDisaster);
 router.post(
   "/update-people-gone",
   verifyToken,
   validateUpdatePeopleGone,
+  handleValidationErrors,
   updatePeopleGoneInDisaster,
 );
 
