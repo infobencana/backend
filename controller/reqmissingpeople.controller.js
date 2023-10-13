@@ -2,52 +2,70 @@ const missingPeopleService = require("../service/reqmissingpeople.service");
 const disasterService = require("../service/disaster.service");
 const logger = require("../logger/api.logger");
 
-async function createMissingPeople(req, res) {
-  try {
-    logger.info("Create missing people::", req.body);
-    const data = req.body;
-    const missingPeople = await missingPeopleService.createMissingPeople(data);
-    res.status(201).json({
-      message: "Missing people added",
-      status: true,
-      data: missingPeople,
-    });
-  } catch (error) {
-    logger.error(error.message);
-    return res.status(500).json({ error: error.message });
-  }
-}
+// async function createMissingPeople(req, res) {
+//   try {
+//     logger.info("Create missing people::", req.body);
+//     const data = req.body;
+//     const missingPeople = await missingPeopleService.createMissingPeople(data);
+//     res.status(201).json({
+//       message: "Missing people added",
+//       status: true,
+//       data: missingPeople,
+//     });
+//   } catch (error) {
+//     logger.error(error.message);
+//     return res.status(500).json({ error: error.message });
+//   }
+// }
 
 async function getMissingPeopleById(req, res) {
   try {
     logger.info("Get missing people::", req.params);
+
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const { id } = req.params;
     const missingPeople = await missingPeopleService.getMissingPeopleById(id);
 
     if (!missingPeople) {
       return res.status(404).json({ message: "Missing people not found" });
     }
-    res.status(200).json({ message: "OK", status: true, data: missingPeople });
+    res.status(200).json({ status: true, data: missingPeople });
   } catch (error) {
     logger.error(error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ status: false, message: error.message });
   }
 }
 
 async function getMissingPeople(req, res) {
   try {
     logger.info("Get missing people::", req.params);
+
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const missingPeople = await missingPeopleService.getMissingPeople();
-    res.status(200).json({ message: "OK", status: true, data: missingPeople });
+    res.status(200).json({ status: true, data: missingPeople });
   } catch (error) {
     logger.error(error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ status: false, message: error.message });
   }
 }
 
 async function deleteMissingPeople(req, res) {
   try {
     logger.info("Delete missing people::", req.params);
+
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const { id } = req.params;
     const existingMissingPerson =
       await missingPeopleService.getMissingPeopleById(id);
@@ -55,13 +73,13 @@ async function deleteMissingPeople(req, res) {
     if (!existingMissingPerson) {
       return res
         .status(404)
-        .json({ message: "Missing person not found", status: false });
+        .json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
     await missingPeopleService.deleteMissingPeopleById(id);
-    res.status(200).json({ message: "Missing people deleted", status: true });
+    res.status(200).json({ status: true, message: "Orang hilang berhasil dihapus" });
   } catch (error) {
     logger.error(error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ status: false, message: error.message });
   }
 }
 
@@ -71,6 +89,8 @@ async function addMissingPeopleFromDisaster(req, res) {
     const {
       bencana_id,
       missing_people_id,
+      name,
+      gender,
       status,
       weight,
       height,
@@ -83,7 +103,7 @@ async function addMissingPeopleFromDisaster(req, res) {
     const disaster = await disasterService.getDisasterById(bencana_id);
 
     if (!disaster) {
-      return res.status(404).json({ message: "Disaster not found" });
+      return res.status(404).json({ status: false, message: "Bencana tidak ditemukan" });
     }
 
     // Find missingPeople based on missing_people_id
@@ -92,14 +112,15 @@ async function addMissingPeopleFromDisaster(req, res) {
     );
 
     if (!missingPeople) {
-      return res.status(404).json({ message: "Missing people not found" });
+      return res.status(404).json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
 
     // Create an object to hold the missing people data
     const missingPeopleData = {
-      name: missingPeople.name,
+      name: name || missingPeople.name,
       bencana_id: disaster._id,
       missing_people_id: missingPeople._id,
+      gender: gender || missingPeople.gender,
       status: status || missingPeople.status,
       weight: weight || missingPeople.weight,
       height: height || missingPeople.height,
@@ -112,19 +133,25 @@ async function addMissingPeopleFromDisaster(req, res) {
       await missingPeopleService.createMissingPeople(missingPeopleData);
 
     res.status(201).json({
-      message: "Req missing people added",
       status: true,
+      message: "Request missing people sudah ditambahkan",
       data: newMissingPeople,
     });
   } catch (error) {
     logger.error(error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ status: false, message: error.message });
   }
 }
 
 async function updatePeopleGoneInDisaster(req, res) {
   try {
     logger.info("Update people_gone in Disaster::", req.body);
+
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const { reqMissingPeopleId } = req.body;
 
     console.log(reqMissingPeopleId);
@@ -134,7 +161,7 @@ async function updatePeopleGoneInDisaster(req, res) {
       await missingPeopleService.getMissingPeopleById(reqMissingPeopleId);
 
     if (!missingPeople) {
-      return res.status(404).json({ message: "Missing people not found" });
+      return res.status(404).json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
 
     // Update the people_gone field in the disaster document
@@ -143,6 +170,7 @@ async function updatePeopleGoneInDisaster(req, res) {
       missingPeople.missing_people_id,
       {
         name: missingPeople.name,
+        gender: missingPeople.gender,
         status: missingPeople.status,
         weight: missingPeople.weight,
         height: missingPeople.height,
@@ -154,15 +182,15 @@ async function updatePeopleGoneInDisaster(req, res) {
 
     res
       .status(200)
-      .json({ message: "OK", status: true, data: updatedDisaster });
+      .json({ status: true, message: "Berhasil diupdate", data: updatedDisaster });
   } catch (error) {
     logger.error(error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ status: false, message: error.message });
   }
 }
 
 module.exports = {
-  createMissingPeople,
+  // createMissingPeople,
   getMissingPeopleById,
   getMissingPeople,
   deleteMissingPeople,

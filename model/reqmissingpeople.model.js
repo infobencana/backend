@@ -14,6 +14,11 @@ const reqMissingPeopleSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
+    gender: {
+      type: String,
+      required: false,
+      default: "",
+    },
     status: {
       type: Boolean,
     },

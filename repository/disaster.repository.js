@@ -96,7 +96,6 @@ async function deletePeopleGone(disasterId, personId) {
     throw new Error("Person not found");
   }
 
-  // Instead of person.remove(), use the following to remove the person:
   disaster.people_gone.pull({ _id: personId });
 
   await disaster.save();
