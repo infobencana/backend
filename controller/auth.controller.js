@@ -30,13 +30,13 @@ module.exports.Login = async (req, res) => {
     logger.info("Login as ::", email);
     const token = await userService.loginUser(email, password);
     res.status(201).json({
-      message: "User berhasil login",
       status: true,
+      message: "User berhasil login",
       data: { token: token },
     });
   } catch (error) {
     logger.error(error.message);
-    if (error.message.includes("Password atau email salah")) {
+    if (error.message.includes("Incorrect password or email")) {
       return res
         .status(400)
         .json({ status: false, message: "Password atau email salah." });

@@ -21,6 +21,12 @@ const logger = require("../logger/api.logger");
 async function getMissingPeopleById(req, res) {
   try {
     logger.info("Get missing people::", req.params);
+
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const { id } = req.params;
     const missingPeople = await missingPeopleService.getMissingPeopleById(id);
 
@@ -37,6 +43,12 @@ async function getMissingPeopleById(req, res) {
 async function getMissingPeople(req, res) {
   try {
     logger.info("Get missing people::", req.params);
+
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const missingPeople = await missingPeopleService.getMissingPeople();
     res.status(200).json({ status: true, data: missingPeople });
   } catch (error) {
@@ -48,6 +60,12 @@ async function getMissingPeople(req, res) {
 async function deleteMissingPeople(req, res) {
   try {
     logger.info("Delete missing people::", req.params);
+
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const { id } = req.params;
     const existingMissingPerson =
       await missingPeopleService.getMissingPeopleById(id);
@@ -128,6 +146,12 @@ async function addMissingPeopleFromDisaster(req, res) {
 async function updatePeopleGoneInDisaster(req, res) {
   try {
     logger.info("Update people_gone in Disaster::", req.body);
+
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const { reqMissingPeopleId } = req.body;
 
     console.log(reqMissingPeopleId);

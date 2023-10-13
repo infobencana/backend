@@ -130,6 +130,12 @@ module.exports.UpdateDisaster = async (req, res) => {
 
 module.exports.AddPeopleGone = async (req, res) => {
   try {
+    logger.info("Adding missing people::", req.params);
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
+
     const { disasterId } = req.params;
     const peopleData = req.body;
     const disaster = await disasterService.addPeopleGone(disasterId, peopleData);
@@ -143,6 +149,10 @@ module.exports.AddPeopleGone = async (req, res) => {
 module.exports.DeletePeopleGone = async (req, res) => {
   try {
     logger.info("Deleting missing people::", req.params);
+    const roleUser = req.user.role;
+    if (roleUser !== "admin") {
+      return res.status(401).json({ status: false, message: "Unauthorized" });
+    }
     const peopleGone = await disasterService.deletePeopleGone(req.params.disasterId, req.params.id);
     res.status(200).json({ status: true, message: "Person successfully deleted", data: peopleGone });
   } catch (error) {

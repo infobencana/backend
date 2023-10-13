@@ -1,7 +1,6 @@
 const {
   Signup,
   Login,
-  Logout,
   Profile,
   UpdateProfile,
 } = require("../controller/auth.controller");
