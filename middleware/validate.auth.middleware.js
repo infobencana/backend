@@ -27,7 +27,14 @@ const validateLogin = [
   body("password").notEmpty().withMessage("Password is required"),
 ];
 
+const validateUpdateProfile = [
+  body("full_name").matches(/^full_name$/).withMessage("Full name should exactly match the expected field name"),
+  body("phone_number").matches(/^phone_number$/).withMessage("Phone number should exactly match the expected field name"),
+  body("photo_profile").matches(/^photo_profile$/).withMessage("Photo profile should exactly match the expected field name"),
+];
+
 module.exports = {
   validateSignup,
   validateLogin,
+  validateUpdateProfile,
 };

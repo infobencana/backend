@@ -13,7 +13,9 @@ const validateCreateMissingPeople = [
 const validateUpdatePeopleGone = [
   body("reqMissingPeopleId")
     .notEmpty()
-    .withMessage("reqMissingPeopleId is required"),
+    .withMessage("reqMissingPeopleId is required")
+    .matches(/^reqMissingPeopleId$/)
+    .withMessage("reqMissingPeopleId should exactly match the expected field name"),
 ];
 
 module.exports = {
