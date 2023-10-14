@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 const reqMissingPeopleModel = require("../model/reqmissingpeople.model");
-const { validateRequestBody } = require("../middleware/validation.middleware");
+const { validateRequestBody, validateFieldPresence } = require("../middleware/validation.middleware");
 
 const validateCreateMissingPeople = [
   validateRequestBody(reqMissingPeopleModel),
@@ -11,11 +11,8 @@ const validateCreateMissingPeople = [
 ];
 
 const validateUpdatePeopleGone = [
-  body("reqMissingPeopleId")
-    .notEmpty()
-    .withMessage("reqMissingPeopleId is required")
-    .matches(/^reqMissingPeopleId$/)
-    .withMessage("reqMissingPeopleId should exactly match the expected field name"),
+  body()
+    .custom(validateFieldPresence("reqMissingPeopleId"))
 ];
 
 module.exports = {

@@ -160,3 +160,45 @@ module.exports.DeletePeopleGone = async (req, res) => {
     return res.status(500).json({ status: false, message: "Internal server error." });
   }
 }
+
+module.exports.AddDiscuss = async (req, res) => {
+  try {
+    logger.info("Adding discuss::", req.params);
+    const { disasterId } = req.params;
+    const discussData = req.body;
+    discussData.name = req.user.full_name;
+    const discuss = await disasterService.addDiscussion(disasterId, discussData);
+    res.status(200).json({
+      status: true,
+      message: "OK",
+      data: discuss
+    });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
+  }
+}
+
+module.exports.GetWeeklyReports = async (req, res) => {
+  try {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const reports = await disasterService.weeklyReport(oneWeekAgo);
+    res.status(200).json({
+      status: true,
+      message: "OK",
+      data: reports
+    });
+  } catch (error) {
+    logger.error("Get Weekly Reports Err: ", error.message);
+    res
+      .status(500)
+      .json({
+        status: false,
+        message: "Internal server error."
+      });
+  }
+}

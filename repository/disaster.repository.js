@@ -102,6 +102,53 @@ async function deletePeopleGone(disasterId, personId) {
   return disaster;
 }
 
+async function addDiscussion(disasterId, disscussData) {
+  const disaster = await Disaster.findById(disasterId);
+  if (!disaster) {
+    throw new Error("Disaster not found");
+  }
+
+  disaster.discuss.push(disscussData);
+  await disaster.save();
+  return disaster;
+}
+
+async function weeklyReport(oneWeekAgo) {
+  const result = await Disaster.aggregate([{
+      $match: {
+        timestamp: {
+          $gte: oneWeekAgo
+        }
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        count: {
+          $sum: 1
+        },
+        totalVictims: {
+          $sum: '$victim'
+        },
+        totalPeopleGone: {
+          $sum: {
+            $size: '$people_gone'
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        count: 1,
+        totalVictims: 1,
+        totalPeopleGone: 1
+      }
+    }
+  ]);
+  return result;
+}
+
 module.exports = {
   addDisaster,
   getListDisaster,
@@ -111,4 +158,6 @@ module.exports = {
   deleteDisasterById,
   updateDisasterById,
   deletePeopleGone,
+  addDiscussion,
+  weeklyReport
 };

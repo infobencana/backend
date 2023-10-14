@@ -17,8 +17,6 @@ const {
 } = require("../middleware/validation.middleware");
 
 router.get("", verifyToken, getMissingPeople);
-router.get("/:id", verifyToken, getMissingPeopleById);
-router.delete("/:id", verifyToken, deleteMissingPeople);
 router.post("/add-from-disaster", verifyToken, validateCreateMissingPeople, handleValidationErrors, addMissingPeopleFromDisaster);
 router.post(
   "/update-people-gone",
@@ -27,5 +25,7 @@ router.post(
   handleValidationErrors,
   updatePeopleGoneInDisaster,
 );
+router.get("/:id", verifyToken, getMissingPeopleById);
+router.delete("/:id", verifyToken, deleteMissingPeople);
 
 module.exports = router;
