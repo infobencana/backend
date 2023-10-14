@@ -19,11 +19,9 @@ const {
 const {
   validateInputDisaster,
 } = require("../middleware/validate.disaster.middleware");
-const { verifyToken } = require("../middleware/auth.middleware");
 
 router.post("", verifyToken, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", verifyToken, GetListDisaster);
-router.get("/:disasterId", verifyToken, GetDisasterById);
 router.delete("/:disasterId", verifyToken, DeleteDisaster);
 router.put("/:disasterId", uploadPicture, verifyToken, UpdateDisaster);
 router.post("/:disasterId/people_gone", verifyToken, AddPeopleGone);
