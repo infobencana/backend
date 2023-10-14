@@ -1,6 +1,8 @@
 const disasterService = require("../service/disaster.service");
 const logger = require("../logger/api.logger");
-const { uploadImageDisaster } = require("../util/gcs.util");
+const {
+  uploadImageDisaster
+} = require("../util/gcs.util");
 
 module.exports.AddDisaster = async (req, res) => {
   try {
@@ -61,7 +63,9 @@ module.exports.GetListDisaster = async (req, res) => {
 
 module.exports.GetDisasterById = async (req, res) => {
   try {
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
@@ -87,7 +91,9 @@ module.exports.GetDisasterById = async (req, res) => {
 
 module.exports.DeleteDisaster = async (req, res) => {
   try {
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
@@ -114,7 +120,9 @@ module.exports.DeleteDisaster = async (req, res) => {
 module.exports.UpdateDisaster = async (req, res) => {
   try {
     logger.info("Updating disaster::", req.params);
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const updateFields = req.body;
 
     if (req.file) {
@@ -154,7 +162,9 @@ module.exports.AddPeopleGone = async (req, res) => {
       });
     }
 
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const peopleData = req.body;
     const disaster = await disasterService.addPeopleGone(
       disasterId,
@@ -197,16 +207,25 @@ module.exports.DeletePeopleGone = async (req, res) => {
     logger.error(error.message);
     return res
       .status(500)
-      .json({ status: false, message: "Internal server error." });
+      .json({
+        status: false,
+        message: "Internal server error."
+      });
   }
 };
 
 module.exports.AddDiscuss = async (req, res) => {
   try {
     logger.info("Adding discuss::", req.params);
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const discussData = req.body;
-    discussData.name = req.user.full_name;
+    // use User Id
+    // discussData.user_id = req.user._id;
+    discussData.name = req.user._id;
+    discussData.photo_profile = req.photo_profile;
+    discussData.role = req.role;
     const discuss = await disasterService.addDiscussion(
       disasterId,
       discussData
@@ -228,7 +247,9 @@ module.exports.AddDiscuss = async (req, res) => {
 module.exports.GetDiscussById = async (req, res) => {
   try {
     logger.info("Getting discuss::", req.params);
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const discuss = await disasterService.getDiscussionById(disasterId);
     res.status(200).json({
       status: true,

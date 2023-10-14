@@ -9,11 +9,12 @@ const {
   AddDiscuss,
   GetDiscussById,
   GetWeeklyReports,
-  AddImage,
+  AddImage
 } = require("../controller/disaster.controller");
-
 const router = require("express").Router();
-const { uploadPicture } = require("../middleware/upload.middleware");
+const {
+  uploadPicture
+} = require("../middleware/upload.middleware");
 const {
   validateInputDisaster,
   validateAddPeopleGone,
@@ -22,7 +23,9 @@ const {
   validateDiscussSchema,
   validatePeopleGoneSchema,
 } = require("../middleware/validate.disaster.middleware");
-const { verifyToken } = require("../middleware/auth.middleware");
+const {
+  verifyToken
+} = require("../middleware/auth.middleware");
 
 router.post("", validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", GetListDisaster);

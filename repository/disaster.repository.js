@@ -137,6 +137,40 @@ async function getDiscussionById(disasterId) {
     }
 
     return disaster.discuss
+
+    // Using user id
+    // const result = await Disasters.aggregate([{
+    //     $match: {
+    //       _id: mongoose.Types.ObjectId(disasterId)
+    //     }
+    //   },
+    //   {
+    //     $unwind: '$discuss'
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'users',
+    //       localField: 'discuss.user_id',
+    //       foreignField: '_id',
+    //       as: 'user'
+    //     }
+    //   },
+    //   {
+    //     $unwind: '$user'
+    //   },
+    //   {
+    //     $project: {
+    //       _id: '$discuss._id',
+    //       user_id: '$discuss.user_id',
+    //       username: '$user.username',
+    //       photo: '$user.photo',
+    //       role: '$user.role'
+    //       comment: '$discuss.comment',
+    //       timestamp: '$discuss.timestamp'
+    //     }
+    //   }
+    // ]).exec();
+    // return result;
   } catch (error) {
     logger.error(error.message);
     throw error;
