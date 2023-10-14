@@ -1,5 +1,8 @@
 const disasterService = require("../service/disaster.service");
-const { body, validationResult } = require("express-validator");
+const {
+  body,
+  validationResult
+} = require("express-validator");
 const logger = require("../logger/api.logger");
 
 module.exports.AddDisaster = async (req, res) => {
@@ -24,7 +27,10 @@ module.exports.AddDisaster = async (req, res) => {
           message: "There's something wrong with the picture",
         });
     } else {
-      res.status(500).json({ status: false, message: "Internal server error." });
+      res.status(500).json({
+        status: false,
+        message: "Internal server error."
+      });
     }
   }
 };
@@ -48,13 +54,18 @@ module.exports.GetListDisaster = async (req, res) => {
     });
   } catch (error) {
     logger.error(error.message);
-    res.status(500).json({ status: false, message: "Internal server error." });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
   }
 };
 
 module.exports.GetDisasterById = async (req, res) => {
   try {
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
@@ -73,13 +84,18 @@ module.exports.GetDisasterById = async (req, res) => {
     }
   } catch (error) {
     logger.error(error.message);
-    res.status(500).json({ status: false, message: "Internal server error." });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
   }
 }
 
 module.exports.DeleteDisaster = async (req, res) => {
   try {
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
@@ -93,20 +109,25 @@ module.exports.DeleteDisaster = async (req, res) => {
 
     await disasterService.deleteDisasterById(disasterId);
     return res
-        .status(200)
-        .json({
-          status: true,
-          message: "Disaster deleted",
-        });
+      .status(200)
+      .json({
+        status: true,
+        message: "Disaster deleted",
+      });
   } catch (error) {
     logger.error(error.message);
-    res.status(500).json({ status: false, message: "Internal server error." });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
   }
 }
 
 module.exports.UpdateDisaster = async (req, res) => {
   try {
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const updateFields = req.body;
 
     const updatedDisaster = await disasterService.updateDisasterById(
@@ -124,7 +145,10 @@ module.exports.UpdateDisaster = async (req, res) => {
     logger.error(error.message);
     res
       .status(500)
-      .json({ status: false, message: "Internal server error." });
+      .json({
+        status: false,
+        message: "Internal server error."
+      });
   }
 }
 
@@ -133,16 +157,28 @@ module.exports.AddPeopleGone = async (req, res) => {
     logger.info("Adding missing people::", req.params);
     const roleUser = req.user.role;
     if (roleUser !== "admin") {
-      return res.status(401).json({ status: false, message: "Unauthorized" });
+      return res.status(401).json({
+        status: false,
+        message: "Unauthorized"
+      });
     }
 
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const peopleData = req.body;
     const disaster = await disasterService.addPeopleGone(disasterId, peopleData);
-    res.status(200).json({message: "OK", status: true, data: disaster});
+    res.status(200).json({
+      message: "OK",
+      status: true,
+      data: disaster
+    });
   } catch (error) {
     logger.error(error.message);
-    res.status(500).json({ status: false, message: "Internal server error."});
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
   }
 }
 
@@ -151,20 +187,32 @@ module.exports.DeletePeopleGone = async (req, res) => {
     logger.info("Deleting missing people::", req.params);
     const roleUser = req.user.role;
     if (roleUser !== "admin") {
-      return res.status(401).json({ status: false, message: "Unauthorized" });
+      return res.status(401).json({
+        status: false,
+        message: "Unauthorized"
+      });
     }
     const peopleGone = await disasterService.deletePeopleGone(req.params.disasterId, req.params.id);
-    res.status(200).json({ status: true, message: "Person successfully deleted", data: peopleGone });
+    res.status(200).json({
+      status: true,
+      message: "Person successfully deleted",
+      data: peopleGone
+    });
   } catch (error) {
     logger.error(error.message);
-    return res.status(500).json({ status: false, message: "Internal server error." });
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
   }
 }
 
 module.exports.AddDiscuss = async (req, res) => {
   try {
     logger.info("Adding discuss::", req.params);
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const discussData = req.body;
     discussData.name = req.user.full_name;
     const discuss = await disasterService.addDiscussion(disasterId, discussData);
@@ -179,6 +227,29 @@ module.exports.AddDiscuss = async (req, res) => {
       status: false,
       message: "Internal server error."
     });
+  }
+}
+
+module.exports.GetDiscussById = async (req, res) => {
+  try {
+    logger.info("Getting discuss::", req.params);
+    const {
+      disasterId
+    } = req.params;
+    const discuss = await disasterService.getDiscussionById(disasterId);
+    res.status(200).json({
+      status: true,
+      message: "OK",
+      data: discuss
+    });
+  } catch (error) {
+    logger.error("Get discuss error: ", error.message);
+    res
+      .status(500)
+      .json({
+        status: false,
+        message: "Internal server error."
+      });
   }
 }
 

@@ -92,6 +92,10 @@ async function addDiscussion(disasterId, disscussData) {
   return await disasterRepository.addDiscussion(disasterId, disscussData);
 }
 
+async function getDiscussionById(disasterId) {
+  return await disasterRepository.getDiscussionById(disasterId);
+}
+
 async function weeklyReport(oneWeekAgo){
   return await disasterRepository.weeklyReport(oneWeekAgo);
 }
@@ -106,5 +110,6 @@ module.exports = {
   updateDisasterById,
   deletePeopleGone,
   addDiscussion,
+  getDiscussionById,
   weeklyReport
 };
