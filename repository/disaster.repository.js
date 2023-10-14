@@ -53,7 +53,9 @@ async function updatePeopleGone(disasterId, personId, updateFields) {
 async function getDisasterById(disasterId) {
   try {
     // Construct the filter object to find by ID
-    const filter = { _id: new mongoose.Types.ObjectId(disasterId) };
+    const filter = {
+      _id: new mongoose.Types.ObjectId(disasterId)
+    };
 
     // Use the filter object in the find() method
     const disaster = await Disaster.findOne(filter);
@@ -65,7 +67,7 @@ async function getDisasterById(disasterId) {
   }
 }
 
-async function deleteDisasterById(disasterId) {
+async function deleteDisasterById(disasterId)  {
   try {
     return await Disaster.findByIdAndDelete(disasterId);
   } catch (error) {
@@ -77,7 +79,9 @@ async function updateDisasterById(disasterId, updateFields) {
   let data = {};
   try {
     data = await Disaster.findByIdAndUpdate(disasterId, updateFields, {
+     
       new: true,
+   
     });
   } catch (error) {
     logger.error(error.message);
@@ -96,10 +100,51 @@ async function deletePeopleGone(disasterId, personId) {
     throw new Error("Person not found");
   }
 
-  disaster.people_gone.pull({ _id: personId });
+  disaster.people_gone.pull({
+    _id: personId
+  });
 
   await disaster.save();
   return disaster;
+}
+
+async function addDiscussion(disasterId, disscussData) {
+  const disaster = await Disaster.findById(disasterId);
+  if (!disaster) {
+    throw new Error("Disaster not found");
+  }
+
+  disaster.people_gone.push(disscussData);
+  await disaster.save();
+  return disaster;
+}
+
+async function weeklyReport(oneWeekAgo) {
+  const result = await Disaster.aggregate([{
+      $match: {
+        timestamp: {
+          $gte: oneWeekAgo
+        }
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        count: {
+          $sum: 1
+        }, // Count the documents
+        totalVictims: {
+          $sum: '$victim'
+        }, // Sum the 'victim' field
+        totalPeopleGone: {
+          $sum: {
+            $size: '$people_gone'
+          }
+        } // Sum the size of 'people_gone' array
+      }
+    }
+  ]);
+  return result;
 }
 
 module.exports = {
@@ -111,4 +156,5 @@ module.exports = {
   deleteDisasterById,
   updateDisasterById,
   deletePeopleGone,
+  weeklyReport,
 };

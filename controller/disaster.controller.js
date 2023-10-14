@@ -1,5 +1,8 @@
 const disasterService = require("../service/disaster.service");
-const { body, validationResult } = require("express-validator");
+const {
+  body,
+  validationResult
+} = require("express-validator");
 const logger = require("../logger/api.logger");
 
 module.exports.AddDisaster = async (req, res) => {
@@ -24,7 +27,10 @@ module.exports.AddDisaster = async (req, res) => {
           message: "There's something wrong with the picture",
         });
     } else {
-      res.status(500).json({ status: false, message: "Internal server error." });
+      res.status(500).json({
+        status: false,
+        message: "Internal server error."
+      });
     }
   }
 };
@@ -48,13 +54,44 @@ module.exports.GetListDisaster = async (req, res) => {
     });
   } catch (error) {
     logger.error(error.message);
-    res.status(500).json({ status: false, message: "Internal server error." });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
   }
 };
 
-module.exports.GetDisasterById = async (req, res) => {
+// Missing People = people_gone
+module.exports.UpdateMissingPeople = async (req, res) => {
   try {
-    const { disasterId } = req.params;
+    logger.info("Update missing people::", req.params);
+    const {
+      id
+    } = req.params;
+    const updateFields = req.body;
+    const missingPeople = await missingPeopleService.updateMissingPeople(
+      id,
+      updateFields
+    );
+    res.status(200).json({
+      message: "OK",
+      status: true,
+      data: missingPeople
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
+  }
+}
+
+// Add a person to people_gone
+module.exports.AddPeopleGone = async (req, res) => {
+  try {
+    const {
+      disasterId
+    } = req.params;
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
@@ -66,20 +103,40 @@ module.exports.GetDisasterById = async (req, res) => {
         });
     } else {
       res.status(200).json({
-        message: "OK",
+        
+      message: "OK",
+     
         success: true,
-        data: existingDisaster,
-      });
+       
+      data: existingDisaster,
+      
+    });
     }
   } catch (error) {
-    logger.error(error.message);
-    res.status(500).json({ status: false, message: "Internal server error." });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
   }
 }
 
+// // Update a person in people_gone
+// module.exports.UpdatePeopleGone = async (req, res) => {
+//   try {
+//     const { disasterId, personId } = req.params;
+//     const updateFields = req.body;
+//     const disaster = await disasterService.updatePeopleGone(disasterId, personId, updateFields);
+//     res.status(200).json(disaster);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// }
+
 module.exports.DeleteDisaster = async (req, res) => {
   try {
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
@@ -93,20 +150,25 @@ module.exports.DeleteDisaster = async (req, res) => {
 
     await disasterService.deleteDisasterById(disasterId);
     return res
-        .status(200)
-        .json({
-          status: true,
-          message: "Disaster deleted",
-        });
+      .status(200)
+      .json({
+        status: true,
+        message: "Disaster deleted",
+      });
   } catch (error) {
     logger.error(error.message);
-    res.status(500).json({ status: false, message: "Internal server error." });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
   }
 }
 
 module.exports.UpdateDisaster = async (req, res) => {
   try {
-    const { disasterId } = req.params;
+    const {
+      disasterId
+    } = req.params;
     const updateFields = req.body;
 
     const updatedDisaster = await disasterService.updateDisasterById(
@@ -124,7 +186,10 @@ module.exports.UpdateDisaster = async (req, res) => {
     logger.error(error.message);
     res
       .status(500)
-      .json({ status: false, message: "Internal server error." });
+      .json({
+        status: false,
+        message: "Internal server error."
+      });
   }
 }
 
@@ -154,9 +219,61 @@ module.exports.DeletePeopleGone = async (req, res) => {
       return res.status(401).json({ status: false, message: "Unauthorized" });
     }
     const peopleGone = await disasterService.deletePeopleGone(req.params.disasterId, req.params.id);
-    res.status(200).json({ status: true, message: "Person successfully deleted", data: peopleGone });
+    res.status(200).json({
+      status: true,
+      message: "Person successfully deleted",
+      data: peopleGone
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error."
+    });
+  }
+}
+
+module.exports.AddDiscuss = async (req, res) => {
+  try {
+    logger.info("Adding discuss::", req.params);
+    const {
+      disasterId
+    } = req.params;
+    const disscussData = req.body;
+    const discuss = await disasterService.addDiscussion(disasterId, disscussData);
+    res.status(200).json({
+      message: "OK",
+      status: true,
+      data: discuss
+    });
   } catch (error) {
     logger.error(error.message);
-    return res.status(500).json({ status: false, message: "Internal server error." });
+    logger.error(error.message);
+    res
+      .status(500)
+      .json({
+        status: false,
+        message: "Internal server error."
+      });
+  }
+}
+
+module.exports.GetWeeklyReports = async (req, res) => {
+  try {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const reports = await disasterService.weeklyReport(oneWeekAgo);
+    res.status(200).json({
+      message: "OK",
+      status: true,
+      data: reports
+    });
+  } catch (error) {
+    logger.error(error.message);
+    res
+      .status(500)
+      .json({
+        status: false,
+        message: "Internal server error."
+      });
   }
 }
