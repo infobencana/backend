@@ -8,7 +8,8 @@ const {
   DeletePeopleGone,
   AddDiscuss,
   GetDiscussById,
-  GetWeeklyReports
+  GetWeeklyReports,
+  AddImage,
 } = require("../controller/disaster.controller");
 
 const router = require("express").Router();
@@ -21,9 +22,10 @@ const { verifyToken } = require("../middleware/auth.middleware");
 
 router.post("", verifyToken, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", verifyToken, GetListDisaster);
+router.post("/upload", uploadPicture, verifyToken, AddImage);
+router.get("/weekly_report", verifyToken, GetWeeklyReports);
 router.post("/:disasterId/discuss", verifyToken, AddDiscuss);
 router.get("/:disasterId/discuss", verifyToken, GetDiscussById);
-router.get("/weekly_report", verifyToken, GetWeeklyReports);
 router.post("/:disasterId/people_gone", verifyToken, validateAddPeopleGone, AddPeopleGone);
 router.delete("/:disasterId/people_gone/:id", verifyToken, DeletePeopleGone);
 router.get("/:disasterId", verifyToken, GetDisasterById);
