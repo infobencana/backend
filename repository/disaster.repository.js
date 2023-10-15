@@ -76,15 +76,27 @@ async function deleteDisasterById(disasterId) {
 }
 
 async function updateDisasterById(disasterId, updateFields) {
-  let data = {};
   try {
-    data = await Disaster.findByIdAndUpdate(disasterId, updateFields, {
+    const disaster = await Disaster.findById(disasterId);
+    if (!disaster) {
+      throw new Error("Disaster not found");
+    }
+
+    if (updateFields.detail && disaster.detail) {
+      updateFields.detail = {
+        ...disaster.detail,
+        ...updateFields.detail
+      };
+    }
+
+    const data = await Disaster.findByIdAndUpdate(disasterId, updateFields, {
       new: true,
     });
+    return data;
   } catch (error) {
     logger.error(error.message);
+    throw error;
   }
-  return data;
 }
 
 async function deletePeopleGone(disasterId, personId) {
