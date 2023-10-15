@@ -1,6 +1,9 @@
 const { body } = require("express-validator");
 const UserModel = require("../model/user.model");
-const { validateRequestBody } = require("../middleware/validation.middleware");
+const {
+  validateRequestBody,
+  validateFieldPresence,
+} = require("../middleware/validation.middleware");
 
 const validateSignup = [
   validateRequestBody(UserModel),
@@ -28,9 +31,7 @@ const validateLogin = [
 ];
 
 const validateUpdateProfile = [
-  body("full_name").matches(/^full_name$/).withMessage("Full name should exactly match the expected field name"),
-  body("phone_number").matches(/^phone_number$/).withMessage("Phone number should exactly match the expected field name"),
-  body("photo_profile").matches(/^photo_profile$/).withMessage("Photo profile should exactly match the expected field name"),
+  body().custom(validateFieldPresence("full_name", "phone_number", "photo_profile")),
 ];
 
 module.exports = {

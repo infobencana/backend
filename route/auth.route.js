@@ -10,6 +10,7 @@ const { uploadPhotoProfile } = require("../middleware/upload.middleware");
 const {
   validateLogin,
   validateSignup,
+  validateUpdateProfile,
 } = require("../middleware/validate.auth.middleware");
 const {
   handleValidationErrors,
@@ -17,7 +18,7 @@ const {
 
 router.post("/signup", validateSignup, handleValidationErrors, Signup);
 router.post("/login", validateLogin, handleValidationErrors, Login);
-router.put("/profile", verifyToken, uploadPhotoProfile, UpdateProfile);
+router.put("/profile", verifyToken, validateUpdateProfile, handleValidationErrors, uploadPhotoProfile, UpdateProfile);
 router.get("/profile", verifyToken, Profile);
 
 module.exports = router;

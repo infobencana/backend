@@ -20,6 +20,7 @@ const validateRequestBody = (model) => (req, res, next) => {
 const validateFieldPresence = (...fieldNames) => {
   return (value, { req }) => {
     const requestKeys = Object.keys(req.body);
+    console.log(req.body)
     const missingFields = fieldNames.filter(fieldName => !requestKeys.includes(fieldName));
     if (missingFields.length > 0) {
       throw new Error(`Required fields missing: ${missingFields.join(', ')}`);

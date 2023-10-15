@@ -7,7 +7,7 @@ module.exports.AddDisaster = async (req, res) => {
     const disasterData = req.body;
     const disaster = await disasterService.publishDisaster(
       disasterData,
-      req.file,
+      req.file
     );
     res.status(200).json({
       message: "Disaster added",
@@ -17,14 +17,14 @@ module.exports.AddDisaster = async (req, res) => {
   } catch (error) {
     logger.error(error.message);
     if (error.message.includes("it is undefined")) {
-      res
-        .status(400)
-        .json({
-          status: false,
-          message: "There's something wrong with the picture",
-        });
+      res.status(400).json({
+        status: false,
+        message: "There's something wrong with the picture",
+      });
     } else {
-      res.status(500).json({ status: false, message: "Internal server error." });
+      res
+        .status(500)
+        .json({ status: false, message: "Internal server error." });
     }
   }
 };
@@ -58,12 +58,10 @@ module.exports.GetDisasterById = async (req, res) => {
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: "Disaster not found",
-        });
+      return res.status(400).json({
+        status: false,
+        message: "Disaster not found",
+      });
     } else {
       res.status(200).json({
         message: "OK",
@@ -75,7 +73,7 @@ module.exports.GetDisasterById = async (req, res) => {
     logger.error(error.message);
     res.status(500).json({ status: false, message: "Internal server error." });
   }
-}
+};
 
 module.exports.DeleteDisaster = async (req, res) => {
   try {
@@ -83,26 +81,22 @@ module.exports.DeleteDisaster = async (req, res) => {
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: "Disaster not found",
-        });
+      return res.status(400).json({
+        status: false,
+        message: "Disaster not found",
+      });
     }
 
     await disasterService.deleteDisasterById(disasterId);
-    return res
-        .status(200)
-        .json({
-          status: true,
-          message: "Disaster deleted",
-        });
+    return res.status(200).json({
+      status: true,
+      message: "Disaster deleted",
+    });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({ status: false, message: "Internal server error." });
   }
-}
+};
 
 module.exports.UpdateDisaster = async (req, res) => {
   try {
@@ -122,11 +116,9 @@ module.exports.UpdateDisaster = async (req, res) => {
     });
   } catch (error) {
     logger.error(error.message);
-    res
-      .status(500)
-      .json({ status: false, message: "Internal server error." });
+    res.status(500).json({ status: false, message: "Internal server error." });
   }
-}
+};
 
 module.exports.AddPeopleGone = async (req, res) => {
   try {
@@ -138,13 +130,16 @@ module.exports.AddPeopleGone = async (req, res) => {
 
     const { disasterId } = req.params;
     const peopleData = req.body;
-    const disaster = await disasterService.addPeopleGone(disasterId, peopleData);
-    res.status(200).json({message: "OK", status: true, data: disaster});
+    const disaster = await disasterService.addPeopleGone(
+      disasterId,
+      peopleData
+    );
+    res.status(200).json({ message: "OK", status: true, data: disaster });
   } catch (error) {
     logger.error(error.message);
-    res.status(500).json({ status: false, message: "Internal server error."});
+    res.status(500).json({ status: false, message: "Internal server error." });
   }
-}
+};
 
 module.exports.DeletePeopleGone = async (req, res) => {
   try {
@@ -153,13 +148,24 @@ module.exports.DeletePeopleGone = async (req, res) => {
     if (roleUser !== "admin") {
       return res.status(401).json({ status: false, message: "Unauthorized" });
     }
-    const peopleGone = await disasterService.deletePeopleGone(req.params.disasterId, req.params.id);
-    res.status(200).json({ status: true, message: "Person successfully deleted", data: peopleGone });
+    const peopleGone = await disasterService.deletePeopleGone(
+      req.params.disasterId,
+      req.params.id
+    );
+    res
+      .status(200)
+      .json({
+        status: true,
+        message: "Person successfully deleted",
+        data: peopleGone,
+      });
   } catch (error) {
     logger.error(error.message);
-    return res.status(500).json({ status: false, message: "Internal server error." });
+    return res
+      .status(500)
+      .json({ status: false, message: "Internal server error." });
   }
-}
+};
 
 module.exports.AddDiscuss = async (req, res) => {
   try {
@@ -167,20 +173,23 @@ module.exports.AddDiscuss = async (req, res) => {
     const { disasterId } = req.params;
     const discussData = req.body;
     discussData.name = req.user.full_name;
-    const discuss = await disasterService.addDiscussion(disasterId, discussData);
+    const discuss = await disasterService.addDiscussion(
+      disasterId,
+      discussData
+    );
     res.status(200).json({
       status: true,
       message: "OK",
-      data: discuss
+      data: discuss,
     });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({
       status: false,
-      message: "Internal server error."
+      message: "Internal server error.",
     });
   }
-}
+};
 
 module.exports.GetWeeklyReports = async (req, res) => {
   try {
@@ -190,15 +199,13 @@ module.exports.GetWeeklyReports = async (req, res) => {
     res.status(200).json({
       status: true,
       message: "OK",
-      data: reports
+      data: reports,
     });
   } catch (error) {
     logger.error("Get Weekly Reports Err: ", error.message);
-    res
-      .status(500)
-      .json({
-        status: false,
-        message: "Internal server error."
-      });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error.",
+    });
   }
-}
+};
