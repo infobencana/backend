@@ -16,8 +16,6 @@ const reqMissingPeopleSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      required: false,
-      default: "",
     },
     status: {
       type: Boolean,
@@ -40,6 +38,9 @@ const reqMissingPeopleSchema = new mongoose.Schema(
     timestamp: {
       type: Date,
       default: Date.now,
+    },
+    req_status: {
+      type: String,
     },
   },
   {

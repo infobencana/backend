@@ -88,6 +88,18 @@ async function deletePeopleGone(disasterId, personId) {
   return await disasterRepository.deletePeopleGone(disasterId, personId);
 }
 
+async function addDiscussion(disasterId, disscussData) {
+  return await disasterRepository.addDiscussion(disasterId, disscussData);
+}
+
+async function getDiscussionById(disasterId) {
+  return await disasterRepository.getDiscussionById(disasterId);
+}
+
+async function weeklyReport(oneWeekAgo){
+  return await disasterRepository.weeklyReport(oneWeekAgo);
+}
+
 module.exports = {
   publishDisaster,
   getListDisaster,
@@ -97,4 +109,7 @@ module.exports = {
   deleteDisasterById,
   updateDisasterById,
   deletePeopleGone,
+  addDiscussion,
+  getDiscussionById,
+  weeklyReport
 };

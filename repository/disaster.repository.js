@@ -53,7 +53,9 @@ async function updatePeopleGone(disasterId, personId, updateFields) {
 async function getDisasterById(disasterId) {
   try {
     // Construct the filter object to find by ID
-    const filter = { _id: new mongoose.Types.ObjectId(disasterId) };
+    const filter = {
+      _id: new mongoose.Types.ObjectId(disasterId)
+    };
 
     // Use the filter object in the find() method
     const disaster = await Disaster.findOne(filter);
@@ -96,10 +98,73 @@ async function deletePeopleGone(disasterId, personId) {
     throw new Error("Person not found");
   }
 
-  disaster.people_gone.pull({ _id: personId });
+  disaster.people_gone.pull({
+    _id: personId
+  });
 
   await disaster.save();
   return disaster;
+}
+
+async function addDiscussion(disasterId, disscussData) {
+  const disaster = await Disaster.findById(disasterId);
+  if (!disaster) {
+    throw new Error("Disaster not found");
+  }
+
+  disaster.discuss.push(disscussData);
+  await disaster.save();
+  return disaster;
+}
+
+async function getDiscussionById(disasterId) {
+  try {
+    const disaster = await Disaster.findById(disasterId);
+    if (!disaster) {
+      throw new Error("Disaster not found");
+    }
+
+    return disaster.discuss
+  } catch (error) {
+    logger.error(error.message);
+    throw error;
+  }
+}
+
+async function weeklyReport(oneWeekAgo) {
+  const result = await Disaster.aggregate([{
+      $match: {
+        timestamp: {
+          $gte: oneWeekAgo
+        }
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        count: {
+          $sum: 1
+        },
+        totalVictims: {
+          $sum: '$victim'
+        },
+        totalPeopleGone: {
+          $sum: {
+            $size: '$people_gone'
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        count: 1,
+        totalVictims: 1,
+        totalPeopleGone: 1
+      }
+    }
+  ]);
+  return result;
 }
 
 module.exports = {
@@ -111,4 +176,7 @@ module.exports = {
   deleteDisasterById,
   updateDisasterById,
   deletePeopleGone,
+  addDiscussion,
+  getDiscussionById,
+  weeklyReport
 };

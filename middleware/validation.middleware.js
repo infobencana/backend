@@ -17,6 +17,18 @@ const validateRequestBody = (model) => (req, res, next) => {
   next();
 };
 
+const validateFieldPresence = (...fieldNames) => {
+  return (value, { req }) => {
+    const requestKeys = Object.keys(req.body);
+    console.log(requestKeys);
+    const invalidFields = requestKeys.filter(fieldName => !fieldNames.includes(fieldName));
+    if (invalidFields.length > 0) {
+      throw new Error(`Invalid fields: ${invalidFields.join(", ")}`);
+    }
+    return true;
+  };
+};
+
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -28,5 +40,6 @@ const handleValidationErrors = (req, res, next) => {
 
 module.exports = {
   validateRequestBody,
+  validateFieldPresence,
   handleValidationErrors,
 };

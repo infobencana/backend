@@ -2,22 +2,6 @@ const missingPeopleService = require("../service/reqmissingpeople.service");
 const disasterService = require("../service/disaster.service");
 const logger = require("../logger/api.logger");
 
-// async function createMissingPeople(req, res) {
-//   try {
-//     logger.info("Create missing people::", req.body);
-//     const data = req.body;
-//     const missingPeople = await missingPeopleService.createMissingPeople(data);
-//     res.status(201).json({
-//       message: "Missing people added",
-//       status: true,
-//       data: missingPeople,
-//     });
-//   } catch (error) {
-//     logger.error(error.message);
-//     return res.status(500).json({ error: error.message });
-//   }
-// }
-
 async function getMissingPeopleById(req, res) {
   try {
     logger.info("Get missing people::", req.params);
@@ -127,6 +111,7 @@ async function addMissingPeopleFromDisaster(req, res) {
       age: age || missingPeople.age,
       address: address || missingPeople.address,
       last_seen: last_seen || missingPeople.last_seen,
+      req_status: "requested",
     };
 
     const newMissingPeople =
@@ -152,37 +137,58 @@ async function updatePeopleGoneInDisaster(req, res) {
       return res.status(401).json({ status: false, message: "Unauthorized" });
     }
 
-    const { reqMissingPeopleId } = req.body;
-
-    console.log(reqMissingPeopleId);
+    const { req_missing_people_id, req_status } = req.body;
 
     // Check if the missing people exist
     const missingPeople =
-      await missingPeopleService.getMissingPeopleById(reqMissingPeopleId);
+      await missingPeopleService.getMissingPeopleById(req_missing_people_id);
 
     if (!missingPeople) {
       return res.status(404).json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
 
-    // Update the people_gone field in the disaster document
-    const updatedDisaster = await disasterService.updatePeopleGone(
-      missingPeople.bencana_id,
-      missingPeople.missing_people_id,
-      {
-        name: missingPeople.name,
-        gender: missingPeople.gender,
-        status: missingPeople.status,
-        weight: missingPeople.weight,
-        height: missingPeople.height,
-        age: missingPeople.age,
-        address: missingPeople.address,
-        last_seen: missingPeople.last_seen,
-      },
-    );
+    if (req_status === "accepted") {
+      let updatedDisaster = await disasterService.updatePeopleGone(
+        missingPeople.bencana_id,
+        missingPeople.missing_people_id,
+        {
+          name: missingPeople.name,
+          gender: missingPeople.gender,
+          status: missingPeople.status,
+          weight: missingPeople.weight,
+          height: missingPeople.height,
+          age: missingPeople.age,
+          address: missingPeople.address,
+          last_seen: missingPeople.last_seen,
+        },
+      );
 
-    res
-      .status(200)
-      .json({ status: true, message: "Berhasil diupdate", data: updatedDisaster });
+      if (!updatedDisaster) {
+        return res.status(404).json({ status: false, message: "Bencana tidak ditemukan" });
+      }
+
+      // Update the request status
+      await missingPeopleService.updateMissingPeople(
+        req_missing_people_id,
+        { req_status },
+      );
+
+      return res
+        .status(200)
+        .json({ status: true, message: "Berhasil diupdate", data: updatedDisaster });
+    } else if (req_status === "rejected") {
+      // Update the request status
+      await missingPeopleService.updateMissingPeople(
+        req_missing_people_id,
+        { req_status },
+      );
+
+      return res
+        .status(200)
+        .json({ status: true, message: "Berhasil ditolak" });
+    } else {
+      return res.status(400).json({ status: false, message: "Invalid request status" });
+    }
   } catch (error) {
     logger.error(error.message);
     return res.status(500).json({ status: false, message: error.message });
@@ -190,7 +196,6 @@ async function updatePeopleGoneInDisaster(req, res) {
 }
 
 module.exports = {
-  // createMissingPeople,
   getMissingPeopleById,
   getMissingPeople,
   deleteMissingPeople,
