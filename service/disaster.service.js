@@ -1,8 +1,7 @@
 const disasterRepository = require("../repository/disaster.repository");
 const { uploadImageDisaster } = require("../util/gcs.util");
 
-async function publishDisaster(disasterData, file) {
-  const pictureUrl = await uploadImageDisaster(file);
+async function publishDisaster(disasterData) {
   const {
     name,
     detail,
@@ -11,6 +10,7 @@ async function publishDisaster(disasterData, file) {
     latitude,
     longitude,
     donations,
+    picture,
     people_gone,
     discuss,
     timestamp,
@@ -24,7 +24,7 @@ async function publishDisaster(disasterData, file) {
     latitude,
     longitude,
     donations,
-    picture: pictureUrl,
+    picture,
     people_gone,
     discuss,
     timestamp,

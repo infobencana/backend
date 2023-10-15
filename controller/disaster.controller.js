@@ -4,13 +4,19 @@ const {
   validationResult
 } = require("express-validator");
 const logger = require("../logger/api.logger");
+const { uploadImageDisaster } = require("../util/gcs.util");
 
 module.exports.AddDisaster = async (req, res) => {
   try {
     const disasterData = req.body;
+    if (req.file) {
+      const pictureUrl = await uploadImageDisaster(req.file);
+      disasterData.picture = pictureUrl;
+    } else if (req.body.picture) {
+      disasterData.picture = req.body.picture;
+    }
     const disaster = await disasterService.publishDisaster(
-      disasterData,
-      req.file
+      disasterData
     );
     res.status(200).json({
       message: "Disaster added",
@@ -274,3 +280,23 @@ module.exports.GetWeeklyReports = async (req, res) => {
     });
   }
 };
+
+
+module.exports.AddImage = async (req, res) => {
+  try {
+    logger.info("Adding image");
+    const file = req.file;
+    const pictureUrl = await uploadImageDisaster(file);
+    res.status(200).json({
+      status: true,
+      message: "OK",
+      data: pictureUrl,
+    });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({
+      status: false,
+      message: "Internal server error.",
+    });
+  }
+}
