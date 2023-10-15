@@ -22,7 +22,7 @@ const { verifyToken } = require("../middleware/auth.middleware");
 
 router.post("", verifyToken, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", verifyToken, GetListDisaster);
-router.post("/upload", uploadPicture, verifyToken, AddImage);
+router.post("/image", uploadPicture, verifyToken, AddImage);
 router.get("/weekly_report", verifyToken, GetWeeklyReports);
 router.post("/:disasterId/discuss", verifyToken, AddDiscuss);
 router.get("/:disasterId/discuss", verifyToken, GetDiscussById);
