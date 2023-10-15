@@ -131,10 +131,16 @@ module.exports.UpdateDisaster = async (req, res) => {
     } = req.params;
     const updateFields = req.body;
 
+    if (req.file) {
+      const pictureUrl = await uploadImageDisaster(req.file);
+      updateFields.picture = pictureUrl;
+    } else if (req.body.picture) {
+      updateFields.picture = req.body.picture;
+    }
+
     const updatedDisaster = await disasterService.updateDisasterById(
       disasterId,
-      updateFields,
-      req.file
+      updateFields
     );
 
     res.status(200).json({

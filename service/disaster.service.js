@@ -1,5 +1,4 @@
 const disasterRepository = require("../repository/disaster.repository");
-const { uploadImageDisaster } = require("../util/gcs.util");
 
 async function publishDisaster(disasterData) {
   const {
@@ -72,12 +71,8 @@ async function deleteDisasterById(disasterId) {
   return await disasterRepository.deleteDisasterById(disasterId);
 }
 
-async function updateDisasterById(disasterId, updateFields, file) {
+async function updateDisasterById(disasterId, updateFields) {
   const { people_gone, discuss, ...validUpdateFields } = updateFields;
-  if (file) {
-    const pictureUrl = await uploadImageDisaster(file);
-    validUpdateFields.picture = pictureUrl;
-  }
   return await disasterRepository.updateDisasterById(
     disasterId,
     validUpdateFields
