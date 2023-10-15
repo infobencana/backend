@@ -16,9 +16,14 @@ async function deleteMissingPeopleById(id) {
   return await missingPeopleRepository.deleteMissingPeopleById(id);
 }
 
+async function updateMissingPeople(id, updateFields) {
+  return await missingPeopleRepository.updateMissingPeople(id, updateFields);
+}
+
 module.exports = {
   createMissingPeople,
   getMissingPeople,
   getMissingPeopleById,
   deleteMissingPeopleById,
+  updateMissingPeople,
 };

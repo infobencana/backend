@@ -34,5 +34,46 @@ exports.validateInputDisaster = (req, res, next) => {
       .json({ status: false, message: "Place can't be empty" });
   }
 
+  if (!detail.status) {
+    return res
+      .status(400)
+      .json({ status: false, message: "Detail status can't be empty" });
+  }
+
+  if (!detail.status) {
+    return res
+      .status(400)
+      .json({ status: false, message: "Detail status can't be empty" });
+  }
+
+  const validStatusValues = ["aman", "waspada", "pemulihan", "darurat"];
+  if (!validStatusValues.includes(detail.status)) {
+    return res.status(400).json({
+      status: false,
+      message: "Invalid status value. Status should be aman, waspada, pemulihan, or darurat",
+    });
+  }
+
   next();
 };
+
+exports.validateAddPeopleGone = (req, res, next) => {
+    const { name, status, last_seen } = req.body;
+    if (!name) {
+        return res
+          .status(400)
+          .json({ status: false, message: "Name can't be empty" });
+    }
+
+    if (!status) {
+        return res
+          .status(400)
+          .json({ status: false, message: "Status can't be empty" });
+    }
+
+    if (!last_seen) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Last seen can't be empty" });
+    }
+}

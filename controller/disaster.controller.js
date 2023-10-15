@@ -119,6 +119,7 @@ module.exports.DeleteDisaster = async (req, res) => {
 
 module.exports.UpdateDisaster = async (req, res) => {
   try {
+    logger.info("Updating disaster::", req.params);
     const {
       disasterId
     } = req.params;

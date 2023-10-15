@@ -1,17 +1,17 @@
 const { validationResult } = require("express-validator");
 
 const validateRequestBody = (model) => (req, res, next) => {
-  const schemaFields = Object.keys(model.schema.obj);
+  const schemaFields = Object.keys(model.schema.paths);
   const requestFields = Object.keys(req.body);
 
-  const missingFields = schemaFields.filter(
-    (field) => !requestFields.includes(field),
+  const invalidFields = requestFields.filter(
+    (field) => !schemaFields.includes(field),
   );
 
-  if (missingFields.length > 0) {
+  if (invalidFields.length > 0) {
     return res.status(400).json({
       status: false,
-      message: `Required fields missing: ${missingFields.join(', ')}`,
+      message: `Invalid fields: ${invalidFields.join(", ")}`,
     });
   }
   next();
@@ -20,10 +20,10 @@ const validateRequestBody = (model) => (req, res, next) => {
 const validateFieldPresence = (...fieldNames) => {
   return (value, { req }) => {
     const requestKeys = Object.keys(req.body);
-    console.log(req.body)
-    const missingFields = fieldNames.filter(fieldName => !requestKeys.includes(fieldName));
-    if (missingFields.length > 0) {
-      throw new Error(`Required fields missing: ${missingFields.join(', ')}`);
+    console.log(requestKeys);
+    const invalidFields = requestKeys.filter(fieldName => !fieldNames.includes(fieldName));
+    if (invalidFields.length > 0) {
+      throw new Error(`Invalid fields: ${invalidFields.join(", ")}`);
     }
     return true;
   };

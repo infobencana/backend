@@ -29,5 +29,4 @@ router.get("/:disasterId", verifyToken, GetDisasterById);
 router.delete("/:disasterId", verifyToken, DeleteDisaster);
 router.put("/:disasterId", uploadPicture, verifyToken, UpdateDisaster);
 
-
 module.exports = router;

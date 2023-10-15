@@ -7,6 +7,7 @@ const {
 
 const validateSignup = [
   validateRequestBody(UserModel),
+  body("full_name").notEmpty().withMessage("Full name is required"),
   body("email")
     .notEmpty()
     .withMessage("Email is required")
@@ -17,7 +18,6 @@ const validateSignup = [
     .withMessage("Password is required")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
-  body("full_name").notEmpty().withMessage("Full name is required"),
 ];
 
 const validateLogin = [

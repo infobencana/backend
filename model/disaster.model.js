@@ -79,59 +79,64 @@ const discussSchema = new mongoose.Schema({
   },
 });
 
-const disasterSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  detail: {
-    type: {
+const disasterSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
       required: true,
     },
-    status: {
+    detail: {
+      type: {
+        type: String,
+        required: true,
+      },
+      status: {
+        type: String,
+        required: true,
+      },
+      date: {
+        type: Date,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+    },
+    place: {
       type: String,
       required: true,
     },
-    date: {
+    victim: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    latitude: {
+      type: Number,
+      required: false,
+      default: 0.0,
+    },
+    longitude: {
+      type: Number,
+      required: false,
+      default: 0.0,
+    },
+    donations: [donationSchema],
+    picture: {
+      type: String,
+      required: true,
+    },
+    people_gone: [peopleGoneSchema],
+    discuss: [discussSchema],
+    timestamp: {
       type: Date,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
+      default: new Date(),
     },
   },
-  place: {
-    type: String,
-    required: true,
-  },
-  victim: {
-    type: Number,
-    required: false,
-    default: 0,
-  },
-  latitude: {
-    type: Number,
-    required: false,
-    default: 0.0,
-  },
-  longitude: {
-    type: Number,
-    required: false,
-    default: 0.0,
-  },
-  donations: [donationSchema],
-  picture: {
-    type: String,
-    required: true,
-  },
-  people_gone: [peopleGoneSchema],
-  discuss: [discussSchema],
-  timestamp: {
-    type: Date,
-    default: new Date(),
-  },
-});
+  {
+    versionKey: false, // Hide the __v field
+  }
+);
 
 module.exports = mongoose.model("Disaster", disasterSchema);
