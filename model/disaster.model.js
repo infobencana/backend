@@ -125,7 +125,8 @@ const disasterSchema = new mongoose.Schema(
     donations: [donationSchema],
     picture: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
     },
     people_gone: [peopleGoneSchema],
     discuss: [discussSchema],
