@@ -1,8 +1,5 @@
 const disasterService = require("../service/disaster.service");
-const {
-  body,
-  validationResult
-} = require("express-validator");
+const { body, validationResult } = require("express-validator");
 const logger = require("../logger/api.logger");
 const { uploadImageDisaster } = require("../util/gcs.util");
 
@@ -15,9 +12,7 @@ module.exports.AddDisaster = async (req, res) => {
     } else if (req.body.picture) {
       disasterData.picture = req.body.picture;
     }
-    const disaster = await disasterService.publishDisaster(
-      disasterData
-    );
+    const disaster = await disasterService.publishDisaster(disasterData);
     res.status(200).json({
       message: "Disaster added",
       status: true,
@@ -33,7 +28,7 @@ module.exports.AddDisaster = async (req, res) => {
     } else {
       res.status(500).json({
         status: false,
-        message: "Internal server error."
+        message: "Internal server error.",
       });
     }
   }
@@ -60,16 +55,14 @@ module.exports.GetListDisaster = async (req, res) => {
     logger.error(error.message);
     res.status(500).json({
       status: false,
-      message: "Internal server error."
+      message: "Internal server error.",
     });
   }
 };
 
 module.exports.GetDisasterById = async (req, res) => {
   try {
-    const {
-      disasterId
-    } = req.params;
+    const { disasterId } = req.params;
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
@@ -88,16 +81,14 @@ module.exports.GetDisasterById = async (req, res) => {
     logger.error(error.message);
     res.status(500).json({
       status: false,
-      message: "Internal server error."
+      message: "Internal server error.",
     });
   }
 };
 
 module.exports.DeleteDisaster = async (req, res) => {
   try {
-    const {
-      disasterId
-    } = req.params;
+    const { disasterId } = req.params;
     const existingDisaster = await disasterService.getDisasterById(disasterId);
 
     if (!existingDisaster) {
@@ -108,17 +99,15 @@ module.exports.DeleteDisaster = async (req, res) => {
     }
 
     await disasterService.deleteDisasterById(disasterId);
-    return res
-      .status(200)
-      .json({
-        status: true,
-        message: "Disaster deleted",
-      });
+    return res.status(200).json({
+      status: true,
+      message: "Disaster deleted",
+    });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({
       status: false,
-      message: "Internal server error."
+      message: "Internal server error.",
     });
   }
 };
@@ -126,9 +115,7 @@ module.exports.DeleteDisaster = async (req, res) => {
 module.exports.UpdateDisaster = async (req, res) => {
   try {
     logger.info("Updating disaster::", req.params);
-    const {
-      disasterId
-    } = req.params;
+    const { disasterId } = req.params;
     const updateFields = req.body;
 
     if (req.file) {
@@ -150,12 +137,10 @@ module.exports.UpdateDisaster = async (req, res) => {
     });
   } catch (error) {
     logger.error(error.message);
-    res
-      .status(500)
-      .json({
-        status: false,
-        message: "Internal server error."
-      });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error.",
+    });
   }
 };
 
@@ -166,25 +151,26 @@ module.exports.AddPeopleGone = async (req, res) => {
     if (roleUser !== "admin") {
       return res.status(401).json({
         status: false,
-        message: "Unauthorized"
+        message: "Unauthorized",
       });
     }
 
-    const {
-      disasterId
-    } = req.params;
+    const { disasterId } = req.params;
     const peopleData = req.body;
-    const disaster = await disasterService.addPeopleGone(disasterId, peopleData);
+    const disaster = await disasterService.addPeopleGone(
+      disasterId,
+      peopleData
+    );
     res.status(200).json({
       message: "OK",
       status: true,
-      data: disaster
+      data: disaster,
     });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({
       status: false,
-      message: "Internal server error."
+      message: "Internal server error.",
     });
   }
 };
@@ -196,20 +182,18 @@ module.exports.DeletePeopleGone = async (req, res) => {
     if (roleUser !== "admin") {
       return res.status(401).json({
         status: false,
-        message: "Unauthorized"
+        message: "Unauthorized",
       });
     }
     const peopleGone = await disasterService.deletePeopleGone(
       req.params.disasterId,
       req.params.id
     );
-    res
-      .status(200)
-      .json({
-        status: true,
-        message: "Person successfully deleted",
-        data: peopleGone,
-      });
+    res.status(200).json({
+      status: true,
+      message: "Person successfully deleted",
+      data: peopleGone,
+    });
   } catch (error) {
     logger.error(error.message);
     return res
@@ -221,9 +205,7 @@ module.exports.DeletePeopleGone = async (req, res) => {
 module.exports.AddDiscuss = async (req, res) => {
   try {
     logger.info("Adding discuss::", req.params);
-    const {
-      disasterId
-    } = req.params;
+    const { disasterId } = req.params;
     const discussData = req.body;
     discussData.name = req.user.full_name;
     const discuss = await disasterService.addDiscussion(
@@ -247,25 +229,21 @@ module.exports.AddDiscuss = async (req, res) => {
 module.exports.GetDiscussById = async (req, res) => {
   try {
     logger.info("Getting discuss::", req.params);
-    const {
-      disasterId
-    } = req.params;
+    const { disasterId } = req.params;
     const discuss = await disasterService.getDiscussionById(disasterId);
     res.status(200).json({
       status: true,
       message: "OK",
-      data: discuss
+      data: discuss,
     });
   } catch (error) {
     logger.error(error.message);
-    res
-      .status(500)
-      .json({
-        status: false,
-        message: "Internal server error."
-      });
+    res.status(500).json({
+      status: false,
+      message: "Internal server error.",
+    });
   }
-}
+};
 
 module.exports.GetWeeklyReports = async (req, res) => {
   try {
@@ -287,7 +265,6 @@ module.exports.GetWeeklyReports = async (req, res) => {
   }
 };
 
-
 module.exports.AddImage = async (req, res) => {
   try {
     logger.info("Adding image");
@@ -305,4 +282,4 @@ module.exports.AddImage = async (req, res) => {
       message: "Internal server error.",
     });
   }
-}
+};
