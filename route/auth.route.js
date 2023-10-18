@@ -3,6 +3,7 @@ const {
   Login,
   Profile,
   UpdateProfile,
+  UploadPhotoProfile,
 } = require("../controller/auth.controller");
 const router = require("express").Router();
 const { verifyToken } = require("../middleware/auth.middleware");
@@ -17,7 +18,8 @@ const {
   // validateFieldPresence,
 } = require("../middleware/validation.middleware");
 
-// we put uploadPhotoProfile in first becuase there's a multer package that will handle the request before it reaches the controller
+
+router.post("/profile/upload_photo", verifyToken, uploadPhotoProfile, UploadPhotoProfile);
 router.put("/profile", verifyToken, uploadPhotoProfile, validateUpdateProfile, handleValidationErrors, UpdateProfile);
 router.get("/profile", verifyToken, Profile);
 router.post("/signup", validateSignup, handleValidationErrors, Signup);

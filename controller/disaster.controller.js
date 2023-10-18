@@ -1,5 +1,4 @@
 const disasterService = require("../service/disaster.service");
-const { body, validationResult } = require("express-validator");
 const logger = require("../logger/api.logger");
 const { uploadImageDisaster } = require("../util/gcs.util");
 
