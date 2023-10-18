@@ -103,7 +103,7 @@ exports.validateDonationSchema = (req, res, next) => {
   const requestData = req.body.donations;
   const invalidFields = [];
 
-  requestData.forEach((donation, _) => {
+  requestData?.forEach((donation, _) => {
     for (const field in donation) {
       if (!allowedFields.includes(field)) {
         invalidFields.push(field);
@@ -127,7 +127,7 @@ exports.validatePeopleGoneSchema = (req, res, next) => {
   const requestData = req.body.people_gone;
   const invalidFields = [];
 
-  requestData.forEach((people, _) => {
+  requestData?.forEach((people, _) => {
     for (const field in people) {
       if (!allowedFields.includes(field)) {
         invalidFields.push(field);
@@ -151,7 +151,7 @@ exports.validateDiscussSchema = (req, res, next) => {
   const requestData = req.body.discuss;
   const invalidFields = [];
 
-  requestData.forEach((discuss, _) => {
+  requestData?.forEach((discuss, _) => {
     for (const field in discuss) {
       if (!allowedFields.includes(field)) {
         invalidFields.push(field);

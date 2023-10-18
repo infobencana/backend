@@ -24,7 +24,7 @@ const {
 } = require("../middleware/validate.disaster.middleware");
 const { verifyToken } = require("../middleware/auth.middleware");
 
-router.post("", verifyToken, validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, uploadPicture, validateInputDisaster, AddDisaster);
+router.post("", validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", verifyToken, GetListDisaster);
 router.post("/image", uploadPicture, verifyToken, AddImage);
 router.get("/weekly_report", verifyToken, GetWeeklyReports);
@@ -34,6 +34,6 @@ router.post("/:disasterId/people_gone", verifyToken, validateAddPeopleGone, AddP
 router.delete("/:disasterId/people_gone/:id", verifyToken, DeletePeopleGone);
 router.get("/:disasterId", verifyToken, GetDisasterById);
 router.delete("/:disasterId", verifyToken, DeleteDisaster);
-router.put("/:disasterId", uploadPicture, verifyToken, UpdateDisaster);
+router.put("/:disasterId", uploadPicture, validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, UpdateDisaster);
 
 module.exports = router;
