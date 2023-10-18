@@ -57,6 +57,66 @@ exports.validateInputDisaster = (req, res, next) => {
   next();
 };
 
+exports.validateDisasterSchema = (req, res, next) => {
+  const allowedFields = [
+    'name',
+    'detail',
+    'detail.type',
+    'detail.status',
+    'detail.date',
+    'detail.description',
+    'place',
+    'victim',
+    'latitude',
+    'longitude',
+    'donations',
+    'picture',
+    'people_gone',
+    'discuss',
+    'timestamp',
+  ];
+
+  const requestData = req.body;
+  const invalidFields = [];
+
+  for (const field in requestData) {
+    if (!allowedFields.includes(field)) {
+      invalidFields.push(field);
+    }
+  }
+
+  if (invalidFields.length > 0) {
+    return res.status(400).json({
+      status: false,
+      message: `Invalid argument names: ${invalidFields.join(', ')}`,
+    });
+  }
+
+  next();
+};
+
+exports.validateDonationSchema = (req, res, next) => {
+  const donationFields = ['type', 'platform_name', 'source', 'holder_name'];
+
+  const requestData = req.body.donations; // Pastikan Anda memeriksa bidang yang sesuai
+  const invalidFields = [];
+
+  for (const field in requestData) {
+    if (!donationFields.includes(field)) {
+      invalidFields.push(field);
+    }
+  }
+
+  if (invalidFields.length > 0) {
+    return res.status(400).json({
+      status: false,
+      message: `Invalid argument names in donationSchema: ${invalidFields.join(', ')}`,
+    });
+  }
+
+  next();
+};
+
 exports.validateAddPeopleGone = (req, res, next) => {
     const { name, status, last_seen } = req.body;
     if (!name) {

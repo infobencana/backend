@@ -17,10 +17,11 @@ const { uploadPicture } = require("../middleware/upload.middleware");
 const {
   validateInputDisaster,
   validateAddPeopleGone,
+  validateDisasterSchema,
 } = require("../middleware/validate.disaster.middleware");
 const { verifyToken } = require("../middleware/auth.middleware");
 
-router.post("", verifyToken, uploadPicture, validateInputDisaster, AddDisaster);
+router.post("", validateDisasterSchema, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", verifyToken, GetListDisaster);
 router.post("/image", uploadPicture, verifyToken, AddImage);
 router.get("/weekly_report", verifyToken, GetWeeklyReports);
