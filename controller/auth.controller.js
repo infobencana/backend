@@ -70,8 +70,8 @@ module.exports.UpdateProfile = async (req, res) => {
   try {
     logger.info("UpdateProfile::", req.user.full_name);
     const { _id, email } = req.user;
-    const { full_name, phone_number } = req.body;
-    const updateFields = { full_name, phone_number, email };
+    const { full_name, gender, phone_number } = req.body;
+    const updateFields = { full_name, gender, phone_number, email };
     const updatedUser = await userService.updateProfile(
       _id,
       updateFields,

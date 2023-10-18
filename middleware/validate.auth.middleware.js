@@ -31,7 +31,7 @@ const validateLogin = [
 ];
 
 const validateUpdateProfile = [
-  body().custom(validateFieldPresence("full_name", "phone_number", "photo_profile")),
+  body().custom(validateFieldPresence("full_name", "gender", "phone_number", "photo_profile")),
 ];
 
 module.exports = {
