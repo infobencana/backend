@@ -1,4 +1,5 @@
 const { isValid } = require("date-fns");
+const apiLogger = require("../logger/api.logger");
 
 exports.validateInputDisaster = (req, res, next) => {
   const { name, place, detail } = req.body;
@@ -92,21 +93,28 @@ exports.validateDisasterSchema = (req, res, next) => {
 };
 
 exports.validateDonationSchema = (req, res, next) => {
-  const donationFields = ['type', 'platform_name', 'source', 'holder_name'];
+  const allowedFields = [
+    'type', 
+    'platform_name', 
+    'source', 
+    'holder_name'
+  ];
 
   const requestData = req.body.donations;
   const invalidFields = [];
 
-  for (const field in requestData) {
-    if (!donationFields.includes(field)) {
-      invalidFields.push(field);
+  requestData.forEach((donation, _) => {
+    for (const field in donation) {
+      if (!allowedFields.includes(field)) {
+        invalidFields.push(field);
+      }
     }
-  }
+  });
 
   if (invalidFields.length > 0) {
     return res.status(400).json({
       status: false,
-      message: `Invalid argument names in donationSchema: ${invalidFields.join(', ')}`,
+      message: `Invalid argument names: ${invalidFields.join(', ')}`,
     });
   }
 
@@ -114,16 +122,18 @@ exports.validateDonationSchema = (req, res, next) => {
 };
 
 exports.validatePeopleGoneSchema = (req, res, next) => {
-  const peopleGoneFields = ['status', 'name', 'source', 'gender', 'weight', 'height', 'age', 'address', 'last_seen'];
+  const allowedFields = ['status', 'name', 'source', 'gender', 'weight', 'height', 'age', 'address', 'last_seen'];
 
   const requestData = req.body.people_gone;
   const invalidFields = [];
 
-  for (const field in requestData) {
-    if (!peopleGoneFields.includes(field)) {
-      invalidFields.push(field);
+  requestData.forEach((people, _) => {
+    for (const field in people) {
+      if (!allowedFields.includes(field)) {
+        invalidFields.push(field);
+      }
     }
-  }
+  });
 
   if (invalidFields.length > 0) {
     return res.status(400).json({
@@ -136,16 +146,18 @@ exports.validatePeopleGoneSchema = (req, res, next) => {
 };
 
 exports.validateDiscussSchema = (req, res, next) => {
-  const discussFields = ['name', 'comment'];
+  const allowedFields = ['name', 'comment'];
 
   const requestData = req.body.discuss;
   const invalidFields = [];
 
-  for (const field in requestData) {
-    if(!discussFields.includes(field)){
-      invalidFields.push(field);
+  requestData.forEach((discuss, _) => {
+    for (const field in discuss) {
+      if (!allowedFields.includes(field)) {
+        invalidFields.push(field);
+      }
     }
-  }
+  });
 
   if (invalidFields.length > 0) {
     return res.status(400).json({

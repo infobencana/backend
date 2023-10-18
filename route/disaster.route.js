@@ -18,10 +18,13 @@ const {
   validateInputDisaster,
   validateAddPeopleGone,
   validateDisasterSchema,
+  validateDonationSchema,
+  validateDiscussSchema,
+  validatePeopleGoneSchema,
 } = require("../middleware/validate.disaster.middleware");
 const { verifyToken } = require("../middleware/auth.middleware");
 
-router.post("", validateDisasterSchema, uploadPicture, validateInputDisaster, AddDisaster);
+router.post("", verifyToken, validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", verifyToken, GetListDisaster);
 router.post("/image", uploadPicture, verifyToken, AddImage);
 router.get("/weekly_report", verifyToken, GetWeeklyReports);
