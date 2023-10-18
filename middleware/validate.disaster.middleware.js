@@ -135,7 +135,29 @@ exports.validatePeopleGoneSchema = (req, res, next) => {
   next();
 };
 
-exports.validateAddPeopleGone = (req, res, next) => {
+exports.validateDiscussSchema = (req, res, next) => {
+  const discussFields = ['name', 'comment'];
+
+  const requestData = req.body.discuss;
+  const invalidFields = [];
+
+  for (const field in requestData) {
+    if(!discussFields.includes(field)){
+      invalidFields.push(field);
+    }
+  }
+
+  if (invalidFields.length > 0) {
+    return res.status(400).json({
+      status: false,
+      message: `Invalid argument names in discussSchema: ${invalidFields.join(', ')}`,
+    });
+  }
+
+  next();
+}
+
+exports.validateAddPeopleGone = (req, res) => {
     const { name, status, last_seen } = req.body;
     if (!name) {
         return res
