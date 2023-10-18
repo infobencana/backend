@@ -113,7 +113,27 @@ exports.validateDonationSchema = (req, res, next) => {
   next();
 };
 
+exports.validatePeopleGoneSchema = (req, res, next) => {
+  const peopleGoneFields = ['status', 'name', 'source', 'gender', 'weight', 'height', 'age', 'address', 'last_seen'];
 
+  const requestData = req.body.people_gone;
+  const invalidFields = [];
+
+  for (const field in requestData) {
+    if (!peopleGoneFields.includes(field)) {
+      invalidFields.push(field);
+    }
+  }
+
+  if (invalidFields.length > 0) {
+    return res.status(400).json({
+      status: false,
+      message: `Invalid argument names in peopleGoneSchema: ${invalidFields.join(', ')}`,
+    });
+  }
+
+  next();
+};
 
 exports.validateAddPeopleGone = (req, res, next) => {
     const { name, status, last_seen } = req.body;
