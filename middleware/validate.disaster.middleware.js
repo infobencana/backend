@@ -61,10 +61,6 @@ exports.validateDisasterSchema = (req, res, next) => {
   const allowedFields = [
     'name',
     'detail',
-    'detail.type',
-    'detail.status',
-    'detail.date',
-    'detail.description',
     'place',
     'victim',
     'latitude',
@@ -98,7 +94,7 @@ exports.validateDisasterSchema = (req, res, next) => {
 exports.validateDonationSchema = (req, res, next) => {
   const donationFields = ['type', 'platform_name', 'source', 'holder_name'];
 
-  const requestData = req.body.donations; // Pastikan Anda memeriksa bidang yang sesuai
+  const requestData = req.body.donations;
   const invalidFields = [];
 
   for (const field in requestData) {
@@ -116,6 +112,8 @@ exports.validateDonationSchema = (req, res, next) => {
 
   next();
 };
+
+
 
 exports.validateAddPeopleGone = (req, res, next) => {
     const { name, status, last_seen } = req.body;
