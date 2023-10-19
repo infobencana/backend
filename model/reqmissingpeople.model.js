@@ -28,13 +28,13 @@ const reqMissingPeopleSchema = new mongoose.Schema(
       type: Boolean,
     },
     weight: {
-      type: String,
+      type: Number,
     },
     height: {
-      type: String,
+      type: Number,
     },
     age: {
-      type: String,
+      type: Number,
     },
     address: {
       type: String,
