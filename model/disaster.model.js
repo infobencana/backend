@@ -35,19 +35,19 @@ const peopleGoneSchema = new mongoose.Schema({
     default: "",
   },
   weight: {
-    type: String,
+    type: Number,
     required: false,
-    default: "",
+    default: 0,
   },
   height: {
-    type: String,
+    type: Number,
     required: false,
-    default: "",
+    default: 0,
   },
   age: {
-    type: String,
+    type: Number,
     required: false,
-    default: "",
+    default: 0,
   },
   address: {
     type: String,
