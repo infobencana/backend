@@ -72,7 +72,7 @@ async function deleteDisasterById(disasterId) {
 }
 
 async function updateDisasterById(disasterId, updateFields) {
-  const { people_gone, discuss, ...validUpdateFields } = updateFields;
+  const { discuss, ...validUpdateFields } = updateFields;
   return await disasterRepository.updateDisasterById(
     disasterId,
     validUpdateFields
