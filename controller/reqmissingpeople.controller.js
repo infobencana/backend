@@ -60,7 +60,9 @@ async function deleteMissingPeople(req, res) {
         .json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
     await missingPeopleService.deleteMissingPeopleById(id);
-    res.status(200).json({ status: true, message: "Orang hilang berhasil dihapus" });
+    res
+      .status(200)
+      .json({ status: true, message: "Orang hilang berhasil dihapus" });
   } catch (error) {
     logger.error(error.message);
     return res.status(500).json({ status: false, message: error.message });
@@ -87,22 +89,28 @@ async function addMissingPeopleFromDisaster(req, res) {
     const disaster = await disasterService.getDisasterById(bencana_id);
 
     if (!disaster) {
-      return res.status(404).json({ status: false, message: "Bencana tidak ditemukan" });
+      return res
+        .status(404)
+        .json({ status: false, message: "Bencana tidak ditemukan" });
     }
 
     // Find missingPeople based on missing_people_id
     const missingPeople = disaster.people_gone.find(
-      (person) => person._id.toString() === missing_people_id,
+      (person) => person._id.toString() === missing_people_id
     );
 
     if (!missingPeople) {
-      return res.status(404).json({ status: false, message: "Orang hilang tidak ditemukan" });
+      return res
+        .status(404)
+        .json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
 
     // Create an object to hold the missing people data
     const missingPeopleData = {
+      req_by: req.user.full_name,
       name: name || missingPeople.name,
       bencana_id: disaster._id,
+      bencana_name: disaster.name,
       missing_people_id: missingPeople._id,
       gender: gender || missingPeople.gender,
       status: status || missingPeople.status,
@@ -140,11 +148,14 @@ async function updatePeopleGoneInDisaster(req, res) {
     const { req_missing_people_id, req_status } = req.body;
 
     // Check if the missing people exist
-    const missingPeople =
-      await missingPeopleService.getMissingPeopleById(req_missing_people_id);
+    const missingPeople = await missingPeopleService.getMissingPeopleById(
+      req_missing_people_id
+    );
 
     if (!missingPeople) {
-      return res.status(404).json({ status: false, message: "Orang hilang tidak ditemukan" });
+      return res
+        .status(404)
+        .json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
 
     if (req_status === "accepted") {
@@ -160,35 +171,92 @@ async function updatePeopleGoneInDisaster(req, res) {
           age: missingPeople.age,
           address: missingPeople.address,
           last_seen: missingPeople.last_seen,
-        },
+        }
       );
 
       if (!updatedDisaster) {
-        return res.status(404).json({ status: false, message: "Bencana tidak ditemukan" });
+        return res
+          .status(404)
+          .json({ status: false, message: "Bencana tidak ditemukan" });
       }
 
       // Update the request status
-      await missingPeopleService.updateMissingPeople(
-        req_missing_people_id,
-        { req_status },
-      );
+      await missingPeopleService.updateMissingPeople(req_missing_people_id, {
+        req_status,
+      });
 
-      return res
-        .status(200)
-        .json({ status: true, message: "Berhasil diupdate", data: updatedDisaster });
+      return res.status(200).json({
+        status: true,
+        message: "Berhasil diupdate",
+        data: updatedDisaster,
+      });
     } else if (req_status === "rejected") {
       // Update the request status
-      await missingPeopleService.updateMissingPeople(
-        req_missing_people_id,
-        { req_status },
-      );
+      await missingPeopleService.updateMissingPeople(req_missing_people_id, {
+        req_status,
+      });
 
       return res
         .status(200)
         .json({ status: true, message: "Berhasil ditolak" });
     } else {
-      return res.status(400).json({ status: false, message: "Invalid request status" });
+      return res
+        .status(400)
+        .json({ status: false, message: "Invalid request status" });
     }
+  } catch (error) {
+    logger.error(error.message);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+}
+
+async function getMissingPeopleByIdDetail(req, res) {
+  try {
+    logger.info("Get missing people::", req.params);
+
+    const { id } = req.params;
+    const missingPeople = await missingPeopleService.getMissingPeopleById(id);
+
+    if (!missingPeople) {
+      return res.status(404).json({ message: "Missing people not found" });
+    }
+
+    // Check if disaster and missing people exist
+    const disaster = await disasterService.getDisasterById(
+      missingPeople.bencana_id
+    );
+
+    if (!disaster) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Bencana tidak ditemukan" });
+    }
+
+    // Find missingPeople based on missing_people_id
+    const missingPeopleFromDisaster = disaster.people_gone.find(
+      (person) =>
+        person._id.toString() === missingPeople.missing_people_id.toString()
+    );
+
+    if (!missingPeopleFromDisaster) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Orang hilang tidak ditemukan" });
+    }
+
+    const { req_by, bencana_id, missing_people_id, req_status, ...afterData } =
+      missingPeople.toObject();
+
+    const data = {
+      _id: missingPeople._id,
+      title: missingPeople.bencana_name,
+      req_by: missingPeople.req_by,
+      date: missingPeople.timestamp,
+      before: missingPeopleFromDisaster,
+      after: afterData,
+    };
+
+    res.status(200).json({ status: true, data: data });
   } catch (error) {
     logger.error(error.message);
     return res.status(500).json({ status: false, message: error.message });
@@ -201,4 +269,5 @@ module.exports = {
   deleteMissingPeople,
   addMissingPeopleFromDisaster,
   updatePeopleGoneInDisaster,
+  getMissingPeopleByIdDetail,
 };

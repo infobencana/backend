@@ -1,11 +1,11 @@
 const router = require("express").Router();
 const {
-  createMissingPeople,
   getMissingPeople,
   getMissingPeopleById,
   deleteMissingPeople,
   addMissingPeopleFromDisaster,
   updatePeopleGoneInDisaster,
+  getMissingPeopleByIdDetail,
 } = require("../controller/reqmissingpeople.controller");
 const { verifyToken } = require("../middleware/auth.middleware");
 const {
@@ -25,6 +25,7 @@ router.post(
   handleValidationErrors,
   updatePeopleGoneInDisaster,
 );
+router.get("/:id/detail", verifyToken, getMissingPeopleByIdDetail);
 router.get("/:id", verifyToken, getMissingPeopleById);
 router.delete("/:id", verifyToken, deleteMissingPeople);
 
