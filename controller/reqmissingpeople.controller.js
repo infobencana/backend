@@ -244,7 +244,7 @@ async function getMissingPeopleByIdDetail(req, res) {
         .json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
 
-    const { req_by, bencana_id, missing_people_id, req_status, ...afterData } =
+    const { req_by, bencana_id, bencana_name, missing_people_id, req_status, ...afterData } =
       missingPeople.toObject();
 
     const data = {
