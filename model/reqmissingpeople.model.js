@@ -3,12 +3,19 @@ const mongoose = require("mongoose");
 
 const reqMissingPeopleSchema = new mongoose.Schema(
   {
+    req_by: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
     },
     bencana_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
+    },
+    bencana_name: {
+      type: String,
     },
     missing_people_id: {
       type: mongoose.Schema.Types.ObjectId,
