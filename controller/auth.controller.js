@@ -72,10 +72,6 @@ module.exports.UpdateProfile = async (req, res) => {
     const { _id, email } = req.user;
     const { full_name, gender, phone_number, photo_profile } = req.body;
 
-    if (photo_profile === "" && !req.file) {
-      updateFields.photo_profile = null;
-    }
-
     const updateFields = {
       full_name,
       gender,
@@ -83,11 +79,17 @@ module.exports.UpdateProfile = async (req, res) => {
       photo_profile,
       email,
     };
+
+    if (photo_profile === "" && !req.file) {
+      updateFields.photo_profile = "";
+    }
+
     const updatedUser = await userService.updateProfile(
       _id,
       updateFields,
       req.file
     );
+
     return res.status(200).json({ status: true, data: updatedUser });
   } catch (error) {
     logger.error(error.message);
