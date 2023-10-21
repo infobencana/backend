@@ -108,17 +108,17 @@ async function addMissingPeopleFromDisaster(req, res) {
     // Create an object to hold the missing people data
     const missingPeopleData = {
       req_by: req.user.full_name,
-      name: name || missingPeople.name,
+      name: name !== undefined ? name : missingPeople.name,
       bencana_id: disaster._id,
       bencana_name: disaster.name,
       missing_people_id: missingPeople._id,
-      gender: gender || missingPeople.gender,
-      status: status || missingPeople.status,
-      weight: weight || missingPeople.weight,
-      height: height || missingPeople.height,
-      age: age || missingPeople.age,
-      address: address || missingPeople.address,
-      last_seen: last_seen || missingPeople.last_seen,
+      gender: gender !== undefined ? gender : missingPeople.gender,
+      status: status !== undefined ? status : missingPeople.status,
+      weight: weight !== undefined ? weight : missingPeople.weight,
+      height: height !== undefined ? height : missingPeople.height,
+      age: age !== undefined ? age : missingPeople.age,
+      address: address !== undefined ? address : missingPeople.address,
+      last_seen: last_seen !== undefined ? last_seen : missingPeople.last_seen,
       req_status: "requested",
     };
 
@@ -244,8 +244,14 @@ async function getMissingPeopleByIdDetail(req, res) {
         .json({ status: false, message: "Orang hilang tidak ditemukan" });
     }
 
-    const { req_by, bencana_id, bencana_name, missing_people_id, req_status, ...afterData } =
-      missingPeople.toObject();
+    const {
+      req_by,
+      bencana_id,
+      bencana_name,
+      missing_people_id,
+      req_status,
+      ...afterData
+    } = missingPeople.toObject();
 
     const data = {
       _id: missingPeople._id,
