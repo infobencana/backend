@@ -15,7 +15,7 @@ async function addDisaster(disaster) {
 async function getListDisaster(query) {
   let data = {};
   try {
-    data = await Disaster.find(query);
+    data = await Disaster.find(query, { discuss: 0 });
   } catch (error) {
     logger.error(error.message);
   }
@@ -58,7 +58,7 @@ async function getDisasterById(disasterId) {
     };
 
     // Use the filter object in the find() method
-    const disaster = await Disaster.findOne(filter);
+    const disaster = await Disaster.findOne(filter, { discuss: 0 });
 
     return disaster;
   } catch (error) {
@@ -126,7 +126,7 @@ async function addDiscussion(disasterId, disscussData) {
 
   disaster.discuss.push(disscussData);
   await disaster.save();
-  return disaster;
+  return disaster.discuss;
 }
 
 async function getDiscussionById(disasterId) {
