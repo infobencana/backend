@@ -27,7 +27,7 @@ const { verifyToken } = require("../middleware/auth.middleware");
 router.post("", verifyToken, validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", GetListDisaster);
 router.post("/image", uploadPicture, verifyToken, AddImage);
-router.get("/weekly_report", verifyToken, GetWeeklyReports);
+router.get("/weekly_report", GetWeeklyReports);
 router.post("/:disasterId/discuss", verifyToken, AddDiscuss);
 router.get("/:disasterId/discuss", verifyToken, GetDiscussById);
 router.post("/:disasterId/people_gone", verifyToken, validateAddPeopleGone, AddPeopleGone);
