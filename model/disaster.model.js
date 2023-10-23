@@ -69,6 +69,16 @@ const discussSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  photo_profile: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  verified: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   comment: {
     type: String,
     required: true,
