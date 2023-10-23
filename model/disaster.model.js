@@ -72,15 +72,15 @@ const discussSchema = new mongoose.Schema({
   //   required: true
   // },
   name: {
-    type: "string",
+    type: String,
     required: true,
   },
   photo_profile: {
-    type: "string",
+    type: String,
     required: true,
   },
   role: {
-    type: "string",
+    type: String,
     required: true,
   },
   comment: {
