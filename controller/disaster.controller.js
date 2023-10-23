@@ -5,12 +5,17 @@ const { uploadImageDisaster } = require("../util/gcs.util");
 module.exports.AddDisaster = async (req, res) => {
   try {
     const disasterData = req.body;
+    const dataUser = req.user;
     if (req.file) {
       const pictureUrl = await uploadImageDisaster(req.file);
       disasterData.picture = pictureUrl;
     } else if (req.body.picture) {
       disasterData.picture = req.body.picture;
     }
+    disasterData.user_detail = {
+      name: dataUser.full_name,
+      picture: dataUser.photo_profile,
+    };
     const disaster = await disasterService.publishDisaster(disasterData);
     res.status(200).json({
       message: "Disaster added",
@@ -116,6 +121,7 @@ module.exports.UpdateDisaster = async (req, res) => {
     logger.info("Updating disaster::", req.params);
     const { disasterId } = req.params;
     const updateFields = req.body;
+    const dataUser = req.user;
 
     if (req.file) {
       const pictureUrl = await uploadImageDisaster(req.file);
@@ -123,6 +129,11 @@ module.exports.UpdateDisaster = async (req, res) => {
     } else if (req.body.picture) {
       updateFields.picture = req.body.picture;
     }
+
+    updateFields.user_detail = {
+      name: dataUser.full_name,
+      picture: dataUser.photo_profile,
+    };
 
     const updatedDisaster = await disasterService.updateDisasterById(
       disasterId,
