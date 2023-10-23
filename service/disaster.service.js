@@ -12,6 +12,7 @@ async function publishDisaster(disasterData) {
     picture,
     people_gone,
     discuss,
+    user_detail,
     timestamp,
   } = disasterData;
 
@@ -26,6 +27,7 @@ async function publishDisaster(disasterData) {
     picture,
     people_gone,
     discuss,
+    user_detail,
     timestamp,
   });
 
