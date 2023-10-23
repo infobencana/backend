@@ -218,10 +218,6 @@ module.exports.AddDiscuss = async (req, res) => {
     const { disasterId } = req.params;
     const discussData = req.body;
     discussData.name = req.user.full_name;
-    discussData.photo_profile = req.user.photo_profile;
-    if (req.user.role === "admin") {
-      discussData.verified = true;
-    }
     const discuss = await disasterService.addDiscussion(
       disasterId,
       discussData
