@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const reqMissingPeopleSchema = new mongoose.Schema(
   {
     req_by: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
     name: {

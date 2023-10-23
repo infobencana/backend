@@ -107,7 +107,7 @@ async function addMissingPeopleFromDisaster(req, res) {
 
     // Create an object to hold the missing people data
     const missingPeopleData = {
-      req_by: req.user.full_name,
+      req_by: req.user._id,
       name: name !== undefined ? name : missingPeople.name,
       bencana_id: disaster._id,
       bencana_name: disaster.name,
@@ -251,7 +251,7 @@ async function getMissingPeopleByIdDetail(req, res) {
       missing_people_id,
       req_status,
       ...afterData
-    } = missingPeople.toObject();
+    } = missingPeople;
 
     const data = {
       _id: missingPeople._id,
