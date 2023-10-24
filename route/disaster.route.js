@@ -10,10 +10,12 @@ const {
   GetDiscussById,
   GetWeeklyReports,
   AddImage,
+  GetLatLong
 } = require("../controller/disaster.controller");
-
 const router = require("express").Router();
-const { uploadPicture } = require("../middleware/upload.middleware");
+const {
+  uploadPicture
+} = require("../middleware/upload.middleware");
 const {
   validateInputDisaster,
   validateAddPeopleGone,
@@ -22,7 +24,9 @@ const {
   validateDiscussSchema,
   validatePeopleGoneSchema,
 } = require("../middleware/validate.disaster.middleware");
-const { verifyToken } = require("../middleware/auth.middleware");
+const {
+  verifyToken
+} = require("../middleware/auth.middleware");
 
 router.post("", verifyToken, validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, uploadPicture, validateInputDisaster, AddDisaster);
 router.get("", GetListDisaster);
@@ -35,5 +39,6 @@ router.delete("/:disasterId/people_gone/:id", verifyToken, DeletePeopleGone);
 router.get("/:disasterId", GetDisasterById);
 router.delete("/:disasterId", verifyToken, DeleteDisaster);
 router.put("/:disasterId", verifyToken, uploadPicture, validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, UpdateDisaster);
+router.get("/:disasterId/lat_long", GetLatLong);
 
 module.exports = router;

@@ -194,12 +194,37 @@ async function addDiscussion(disasterId, disscussData) {
 
 async function getDiscussionById(disasterId) {
   try {
-    const disaster = await Disaster.findById(disasterId);
-    if (!disaster) {
-      throw new Error("Disaster not found");
-    }
-
-    return disaster.discuss;
+    const result = await Disaster.aggregate([{
+        $match: {
+          _id: new mongoose.Types.ObjectId(disasterId)
+        }
+      },
+      {
+        $unwind: '$discuss'
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'discuss.userId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $unwind: '$user'
+      },
+      {
+        $project: {
+          _id: '$discuss._id',
+          full_name: '$user.full_name',
+          photo_profile: '$user.photo_profile',
+          role: '$user.role',
+          comment: '$discuss.comment',
+          timestamp: '$discuss.timestamp'
+        }
+      }
+    ]).exec();
+    return result;
   } catch (error) {
     logger.error(error.message);
     throw error;
@@ -243,6 +268,38 @@ async function weeklyReport(oneWeekAgo) {
   return result;
 }
 
+async function getLatLongById(disasterId) {
+  try {
+    const latlong = await Disaster.aggregate([{
+        $match: {
+          _id: new mongoose.Types.ObjectId(disasterId)
+        }
+      },
+      {
+        $addFields: {
+          type: '$detail.type',
+          date: '$detail.date'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          type: 1,
+          date: 1,
+          latitude: 1,
+          longitude: 1
+        }
+      }
+    ]);
+    return latlong;
+
+  } catch (error) {
+    logger.error(error.message);
+    throw error;
+  }
+}
+
 module.exports = {
   addDisaster,
   getListDisaster,
@@ -255,4 +312,5 @@ module.exports = {
   addDiscussion,
   getDiscussionById,
   weeklyReport,
+  getLatLongById
 };

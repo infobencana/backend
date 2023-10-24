@@ -97,6 +97,10 @@ async function weeklyReport(oneWeekAgo){
   return await disasterRepository.weeklyReport(oneWeekAgo);
 }
 
+async function getLatLongById(disasterId) {
+  return await disasterRepository.getLatLongById(disasterId);
+}
+
 module.exports = {
   publishDisaster,
   getListDisaster,
@@ -108,5 +112,6 @@ module.exports = {
   deletePeopleGone,
   addDiscussion,
   getDiscussionById,
-  weeklyReport
+  weeklyReport,
+  getLatLongById
 };
