@@ -213,6 +213,16 @@ async function weeklyReport(oneWeekAgo) {
   return result;
 }
 
+async function getLatLongById(disasterId) {
+  try {
+    const latlong = await Disaster.findById(disasterId).select('_id name detail.type detail.name detail.date lat long');
+    return latlong;
+  } catch (error) {
+    logger.error(error.message);
+    throw error;
+  }
+}
+
 module.exports = {
   addDisaster,
   getListDisaster,
@@ -224,5 +234,6 @@ module.exports = {
   deletePeopleGone,
   addDiscussion,
   getDiscussionById,
-  weeklyReport
+  weeklyReport,
+  getLatLongById
 };

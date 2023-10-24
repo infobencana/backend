@@ -222,19 +222,20 @@ module.exports.AddDiscuss = async (req, res) => {
     } = req.params;
     const discussData = req.body;
     // use User Id
-    // discussData.user_id = req.user._id;
-    discussData.name = req.user._id;
-    discussData.photo_profile = req.photo_profile;
-    discussData.role = req.role;
-    const discuss = await disasterService.addDiscussion(
-      disasterId,
-      discussData
-    );
-    res.status(200).json({
-      status: true,
-      message: "OK",
-      data: discuss,
-    });
+    discussData.userId = req.user._id.toString();
+    // discussData.name = req.user._id;
+    // discussData.photo_profile = req.photo_profile;
+    // discussData.role = req.role;
+    console.log(discussData);
+    // const discuss = await disasterService.addDiscussion(
+    //   disasterId,
+    //   discussData
+    // );
+    // res.status(200).json({
+    //   status: true,
+    //   message: "OK",
+    //   data: discuss,
+    // });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({
@@ -294,6 +295,36 @@ module.exports.AddImage = async (req, res) => {
       status: true,
       message: "OK",
       data: pictureUrl,
+    });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({
+      status: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
+module.exports.GetLatLong = async (req, res) => {
+  try {
+    logger.info("Getting latitude and longitude::");
+    const {
+      disasterId
+    } = req.params;
+    const existingDisaster = await disasterService.getDisasterById(disasterId);
+
+    if (!existingDisaster) {
+      return res.status(400).json({
+        status: false,
+        message: "Disaster not found",
+      });
+    }
+
+    const latlong = await disasterService.getLatLongById(disasterId);
+    res.status(200).json({
+      status: true,
+      message: "OK",
+      data: latlong,
     });
   } catch (error) {
     logger.error(error.message);
