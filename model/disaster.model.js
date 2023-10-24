@@ -65,23 +65,10 @@ const peopleGoneSchema = new mongoose.Schema({
 });
 
 const discussSchema = new mongoose.Schema({
-  // Use UserID
-  // userId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User',
-  //   required: true
-  // },
-  name: {
-    type: String,
-    required: true,
-  },
-  photo_profile: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    required: true,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    // required: true
   },
   comment: {
     type: String,

@@ -221,21 +221,17 @@ module.exports.AddDiscuss = async (req, res) => {
       disasterId
     } = req.params;
     const discussData = req.body;
-    // use User Id
-    discussData.userId = req.user._id.toString();
-    // discussData.name = req.user._id;
-    // discussData.photo_profile = req.photo_profile;
-    // discussData.role = req.role;
+    discussData.userId = req.user._id;
     console.log(discussData);
-    // const discuss = await disasterService.addDiscussion(
-    //   disasterId,
-    //   discussData
-    // );
-    // res.status(200).json({
-    //   status: true,
-    //   message: "OK",
-    //   data: discuss,
-    // });
+    const discuss = await disasterService.addDiscussion(
+      disasterId,
+      discussData
+    );
+    res.status(200).json({
+      status: true,
+      message: "OK",
+      data: discuss,
+    });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({

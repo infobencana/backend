@@ -131,46 +131,38 @@ async function addDiscussion(disasterId, disscussData) {
 
 async function getDiscussionById(disasterId) {
   try {
-    const disaster = await Disaster.findById(disasterId);
-    if (!disaster) {
-      throw new Error("Disaster not found");
-    }
-
-    return disaster.discuss
-
-    // Using user id
-    // const result = await Disasters.aggregate([{
-    //     $match: {
-    //       _id: new mongoose.Types.ObjectId(disasterId)
-    //     }
-    //   },
-    //   {
-    //     $unwind: '$discuss'
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: 'users',
-    //       localField: 'discuss.user_id',
-    //       foreignField: '_id',
-    //       as: 'user'
-    //     }
-    //   },
-    //   {
-    //     $unwind: '$user'
-    //   },
-    //   {
-    //     $project: {
-    //       _id: '$discuss._id',
-    //       user_id: '$discuss.user_id',
-    //       username: '$user.username',
-    //       photo: '$user.photo',
-    //       role: '$user.role'
-    //       comment: '$discuss.comment',
-    //       timestamp: '$discuss.timestamp'
-    //     }
-    //   }
-    // ]).exec();
-    // return result;
+    const result = await Disaster.aggregate([{
+        $match: {
+          _id: new mongoose.Types.ObjectId(disasterId)
+        }
+      },
+      {
+        $unwind: '$discuss'
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'discuss.userId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $unwind: '$user'
+      },
+      {
+        $project: {
+          _id: '$discuss._id',
+          user_id: '$discuss.userId',
+          username: '$user.full_name',
+          photo: '$user.photo_profile',
+          role: '$user.role',
+          comment: '$discuss.comment',
+          timestamp: '$discuss.timestamp'
+        }
+      }
+    ]).exec();
+    return result;
   } catch (error) {
     logger.error(error.message);
     throw error;
