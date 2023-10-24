@@ -153,9 +153,8 @@ async function getDiscussionById(disasterId) {
       {
         $project: {
           _id: '$discuss._id',
-          user_id: '$discuss.userId',
-          username: '$user.full_name',
-          photo: '$user.photo_profile',
+          full_name: '$user.full_name',
+          photo_profile: '$user.photo_profile',
           role: '$user.role',
           comment: '$discuss.comment',
           timestamp: '$discuss.timestamp'
