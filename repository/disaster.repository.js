@@ -37,8 +37,12 @@ async function getListDisaster(query) {
           picture: 1,
           people_gone: 1,
           user_detail: {
-            full_name: { $arrayElemAt: ["$user.full_name", 0] },
-            photo_profile: { $arrayElemAt: ["$user.photo_profile", 0] },
+            name: {
+              $ifNull: [{ $arrayElemAt: ["$user.full_name", 0] }, ""],
+            },
+            picture: {
+              $ifNull: [{ $arrayElemAt: ["$user.photo_profile", 0] }, ""],
+            },
           },
           timestamp: 1,
         },
@@ -107,8 +111,12 @@ async function getDisasterById(disasterId) {
           picture: 1,
           people_gone: 1,
           user_detail: {
-            full_name: { $arrayElemAt: ["$user.full_name", 0] },
-            photo_profile: { $arrayElemAt: ["$user.photo_profile", 0] },
+            name: {
+              $ifNull: [{ $arrayElemAt: ["$user.full_name", 0] }, ""],
+            },
+            picture: {
+              $ifNull: [{ $arrayElemAt: ["$user.photo_profile", 0] }, ""],
+            },
           },
           timestamp: 1,
         },
