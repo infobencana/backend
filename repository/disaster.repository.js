@@ -141,7 +141,7 @@ async function getDiscussionById(disasterId) {
     // Using user id
     // const result = await Disasters.aggregate([{
     //     $match: {
-    //       _id: mongoose.Types.ObjectId(disasterId)
+    //       _id: new mongoose.Types.ObjectId(disasterId)
     //     }
     //   },
     //   {
@@ -215,8 +215,30 @@ async function weeklyReport(oneWeekAgo) {
 
 async function getLatLongById(disasterId) {
   try {
-    const latlong = await Disaster.findById(disasterId).select('_id name detail.type detail.name detail.date lat long');
+    const latlong = await Disaster.aggregate([{
+        $match: {
+          _id: new mongoose.Types.ObjectId(disasterId)
+        }
+      },
+      {
+        $addFields: {
+          type: '$detail.type',
+          date: '$detail.date'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          type: 1,
+          date: 1,
+          latitude: 1,
+          longitude: 1
+        }
+      }
+    ]);
     return latlong;
+
   } catch (error) {
     logger.error(error.message);
     throw error;
