@@ -123,7 +123,7 @@ async function getDisasterById(disasterId) {
       },
     ]);
 
-    return disaster;
+    return disaster[0];
   } catch (error) {
     logger.error(error.message);
     throw error;
