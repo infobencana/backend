@@ -12,10 +12,7 @@ module.exports.AddDisaster = async (req, res) => {
     } else if (req.body.picture) {
       disasterData.picture = req.body.picture;
     }
-    disasterData.user_detail = {
-      name: dataUser.full_name,
-      picture: dataUser.photo_profile,
-    };
+    disasterData.user_detail = dataUser._id;
     const disaster = await disasterService.publishDisaster(disasterData);
     res.status(200).json({
       message: "Disaster added",
@@ -130,10 +127,7 @@ module.exports.UpdateDisaster = async (req, res) => {
       updateFields.picture = req.body.picture;
     }
 
-    updateFields.user_detail = {
-      name: dataUser.full_name,
-      picture: dataUser.photo_profile,
-    };
+    disasterData.user_detail = dataUser._id;
 
     const updatedDisaster = await disasterService.updateDisasterById(
       disasterId,

@@ -15,7 +15,35 @@ async function addDisaster(disaster) {
 async function getListDisaster(query) {
   let data = {};
   try {
-    data = await Disaster.find(query, { discuss: 0 });
+    data = await Disaster.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_detail",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          detail: 1,
+          place: 1,
+          victim: 1,
+          latitude: 1,
+          longitude: 1,
+          donations: 1,
+          picture: 1,
+          people_gone: 1,
+          user_detail: {
+            full_name: { $arrayElemAt: ["$user.full_name", 0] },
+            photo_profile: { $arrayElemAt: ["$user.photo_profile", 0] },
+          },
+          timestamp: 1,
+        },
+      },
+    ]);
   } catch (error) {
     logger.error(error.message);
   }
@@ -52,13 +80,40 @@ async function updatePeopleGone(disasterId, personId, updateFields) {
 
 async function getDisasterById(disasterId) {
   try {
-    // Construct the filter object to find by ID
-    const filter = {
-      _id: new mongoose.Types.ObjectId(disasterId)
-    };
-
-    // Use the filter object in the find() method
-    const disaster = await Disaster.findOne(filter, { discuss: 0 });
+    const disaster = await Disaster.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(disasterId),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_detail",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          detail: 1,
+          place: 1,
+          victim: 1,
+          latitude: 1,
+          longitude: 1,
+          donations: 1,
+          picture: 1,
+          people_gone: 1,
+          user_detail: {
+            full_name: { $arrayElemAt: ["$user.full_name", 0] },
+            photo_profile: { $arrayElemAt: ["$user.photo_profile", 0] },
+          },
+          timestamp: 1,
+        },
+      },
+    ]);
 
     return disaster;
   } catch (error) {
@@ -85,7 +140,7 @@ async function updateDisasterById(disasterId, updateFields) {
     if (updateFields.detail && disaster.detail) {
       updateFields.detail = {
         ...disaster.detail,
-        ...updateFields.detail
+        ...updateFields.detail,
       };
     }
 
@@ -111,7 +166,7 @@ async function deletePeopleGone(disasterId, personId) {
   }
 
   disaster.people_gone.pull({
-    _id: personId
+    _id: personId,
   });
 
   await disaster.save();
@@ -136,7 +191,7 @@ async function getDiscussionById(disasterId) {
       throw new Error("Disaster not found");
     }
 
-    return disaster.discuss
+    return disaster.discuss;
   } catch (error) {
     logger.error(error.message);
     throw error;
@@ -144,37 +199,38 @@ async function getDiscussionById(disasterId) {
 }
 
 async function weeklyReport(oneWeekAgo) {
-  const result = await Disaster.aggregate([{
+  const result = await Disaster.aggregate([
+    {
       $match: {
         timestamp: {
-          $gte: oneWeekAgo
-        }
-      }
+          $gte: oneWeekAgo,
+        },
+      },
     },
     {
       $group: {
         _id: null,
         count: {
-          $sum: 1
+          $sum: 1,
         },
         totalVictims: {
-          $sum: '$victim'
+          $sum: "$victim",
         },
         totalPeopleGone: {
           $sum: {
-            $size: '$people_gone'
-          }
-        }
-      }
+            $size: "$people_gone",
+          },
+        },
+      },
     },
     {
       $project: {
         _id: 0,
         count: 1,
         totalVictims: 1,
-        totalPeopleGone: 1
-      }
-    }
+        totalPeopleGone: 1,
+      },
+    },
   ]);
   return result;
 }
@@ -190,5 +246,5 @@ module.exports = {
   deletePeopleGone,
   addDiscussion,
   getDiscussionById,
-  weeklyReport
+  weeklyReport,
 };

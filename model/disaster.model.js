@@ -131,16 +131,8 @@ const disasterSchema = new mongoose.Schema(
     people_gone: [peopleGoneSchema],
     discuss: [discussSchema],
     user_detail: {
-      name : {
-        type : String,
-        require: false,
-        default: "Anonim"
-      },
-      picture : {
-        type: String,
-        required: false,
-        default: "",
-      }
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
     },
     timestamp: {
       type: Date,
