@@ -127,7 +127,7 @@ module.exports.UpdateDisaster = async (req, res) => {
       updateFields.picture = req.body.picture;
     }
 
-    disasterData.user_detail = dataUser._id;
+    updateFields.user_detail = dataUser._id;
 
     const updatedDisaster = await disasterService.updateDisasterById(
       disasterId,
