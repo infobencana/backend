@@ -33,7 +33,7 @@ router.get("", GetListDisaster);
 router.post("/image", uploadPicture, verifyToken, AddImage);
 router.get("/weekly_report", GetWeeklyReports);
 router.post("/:disasterId/discuss", verifyToken, AddDiscuss);
-router.get("/:disasterId/discuss", verifyToken, GetDiscussById);
+router.get("/:disasterId/discuss", GetDiscussById);
 router.post("/:disasterId/people_gone", verifyToken, validateAddPeopleGone, AddPeopleGone);
 router.delete("/:disasterId/people_gone/:id", verifyToken, DeletePeopleGone);
 router.get("/:disasterId", GetDisasterById);
