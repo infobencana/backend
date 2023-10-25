@@ -60,7 +60,7 @@ const peopleGoneSchema = new mongoose.Schema({
   },
   timestamp: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
 });
 
@@ -76,7 +76,7 @@ const discussSchema = new mongoose.Schema({
   },
   timestamp: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
 });
 
@@ -132,7 +132,7 @@ const disasterSchema = new mongoose.Schema({
   discuss: [discussSchema],
   timestamp: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
 }, {
   versionKey: false, // Hide the __v field
