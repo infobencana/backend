@@ -12,11 +12,10 @@ async function addDisaster(disaster) {
   return data;
 }
 
-async function getListDisaster(query) {
+async function getListDisaster(filter) {
   let data = {};
   try {
-    data = await Disaster.aggregate([
-      {
+    const aggregationPipeline = [{
         $lookup: {
           from: "users",
           localField: "user_detail",
@@ -38,16 +37,69 @@ async function getListDisaster(query) {
           people_gone: 1,
           user_detail: {
             name: {
-              $ifNull: [{ $arrayElemAt: ["$user.full_name", 0] }, ""],
+              $ifNull: [{
+                $arrayElemAt: ["$user.full_name", 0]
+              }, ""],
             },
             picture: {
-              $ifNull: [{ $arrayElemAt: ["$user.photo_profile", 0] }, ""],
+              $ifNull: [{
+                $arrayElemAt: ["$user.photo_profile", 0]
+              }, ""],
             },
           },
           timestamp: 1,
         },
       },
-    ]);
+    ];
+
+    if (filter.search) {
+      aggregationPipeline.push({
+        $match: {
+          $or: [{
+              name: {
+                $regex: filter.search,
+                $options: 'i'
+              }
+            },
+            {
+              'detail.type': {
+                $regex: filter.search,
+                $options: 'i'
+              }
+            },
+            {
+              'detail.place': {
+                $regex: filter.search,
+                $options: 'i'
+              }
+            },
+          ],
+        },
+      });
+    }
+
+    if (filter.sort === 'oldest') {
+      aggregationPipeline.push({
+        $sort: {
+          timestamp: 1
+        }
+      });
+    } else {
+      aggregationPipeline.push({
+        $sort: {
+          timestamp: -1
+        }
+      });
+    }
+
+    if (filter.status) {
+      aggregationPipeline.push({
+        $match: {
+          'detail.status': filter.status,
+        }
+      });
+    }
+    data = await Disaster.aggregate(aggregationPipeline).exec();
   } catch (error) {
     logger.error(error.message);
   }
@@ -65,7 +117,6 @@ async function addPeopleGone(disasterId, peopleData) {
   return disaster;
 }
 
-// Here
 async function updatePeopleGone(disasterId, personId, updateFields) {
   const disaster = await Disaster.findById(disasterId);
   if (!disaster) {
@@ -84,8 +135,7 @@ async function updatePeopleGone(disasterId, personId, updateFields) {
 
 async function getDisasterById(disasterId) {
   try {
-    const disaster = await Disaster.aggregate([
-      {
+    const disaster = await Disaster.aggregate([{
         $match: {
           _id: new mongoose.Types.ObjectId(disasterId),
         },
@@ -112,10 +162,14 @@ async function getDisasterById(disasterId) {
           people_gone: 1,
           user_detail: {
             name: {
-              $ifNull: [{ $arrayElemAt: ["$user.full_name", 0] }, ""],
+              $ifNull: [{
+                $arrayElemAt: ["$user.full_name", 0]
+              }, ""],
             },
             picture: {
-              $ifNull: [{ $arrayElemAt: ["$user.photo_profile", 0] }, ""],
+              $ifNull: [{
+                $arrayElemAt: ["$user.photo_profile", 0]
+              }, ""],
             },
           },
           timestamp: 1,
@@ -232,8 +286,7 @@ async function getDiscussionById(disasterId) {
 }
 
 async function weeklyReport(oneWeekAgo) {
-  const result = await Disaster.aggregate([
-    {
+  const result = await Disaster.aggregate([{
       $match: {
         timestamp: {
           $gte: oneWeekAgo,
@@ -268,27 +321,32 @@ async function weeklyReport(oneWeekAgo) {
   return result;
 }
 
-async function getLatLongById(disasterId) {
+async function getLatLong() {
   try {
     const latlong = await Disaster.aggregate([{
         $match: {
-          _id: new mongoose.Types.ObjectId(disasterId)
+          'detail.status': {
+            $in: ['waspada', 'darurat']
+          }
         }
       },
       {
         $addFields: {
           type: '$detail.type',
-          date: '$detail.date'
+          status: '$detail.status',
+          date: '$detail.date',
         }
       },
       {
         $project: {
           _id: 1,
-          name: 1,
           type: 1,
           date: 1,
+          status: 1,
+          victim: 1,
           latitude: 1,
-          longitude: 1
+          longitude: 1,
+          place: 1,
         }
       }
     ]);
@@ -312,5 +370,5 @@ module.exports = {
   addDiscussion,
   getDiscussionById,
   weeklyReport,
-  getLatLongById
+  getLatLong
 };

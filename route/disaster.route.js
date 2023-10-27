@@ -32,6 +32,7 @@ router.post("", verifyToken, validateDisasterSchema, validateDonationSchema, val
 router.get("", GetListDisaster);
 router.post("/image", uploadPicture, verifyToken, AddImage);
 router.get("/weekly_report", GetWeeklyReports);
+router.get("/lat_long", GetLatLong);
 router.post("/:disasterId/discuss", verifyToken, AddDiscuss);
 router.get("/:disasterId/discuss", GetDiscussById);
 router.post("/:disasterId/people_gone", verifyToken, validateAddPeopleGone, AddPeopleGone);
@@ -39,6 +40,5 @@ router.delete("/:disasterId/people_gone/:id", verifyToken, DeletePeopleGone);
 router.get("/:disasterId", GetDisasterById);
 router.delete("/:disasterId", verifyToken, DeleteDisaster);
 router.put("/:disasterId", verifyToken, uploadPicture, validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, UpdateDisaster);
-router.get("/:disasterId/lat_long", GetLatLong);
 
 module.exports = router;
