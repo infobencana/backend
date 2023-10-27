@@ -333,6 +333,7 @@ async function getLatLong() {
       {
         $addFields: {
           type: '$detail.type',
+          status: '$detail.status',
           date: '$detail.date',
         }
       },
@@ -341,6 +342,7 @@ async function getLatLong() {
           _id: 1,
           type: 1,
           date: 1,
+          status: 1,
           victim: 1,
           latitude: 1,
           longitude: 1,
