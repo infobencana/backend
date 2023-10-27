@@ -39,6 +39,6 @@ router.delete("/:disasterId/people_gone/:id", verifyToken, DeletePeopleGone);
 router.get("/:disasterId", GetDisasterById);
 router.delete("/:disasterId", verifyToken, DeleteDisaster);
 router.put("/:disasterId", verifyToken, uploadPicture, validateDisasterSchema, validateDonationSchema, validateDiscussSchema, validatePeopleGoneSchema, UpdateDisaster);
-router.get("/:disasterId/lat_long", GetLatLong);
+router.get("/lat_long", GetLatLong);
 
 module.exports = router;

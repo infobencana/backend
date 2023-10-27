@@ -85,8 +85,8 @@ async function weeklyReport(oneWeekAgo) {
   return await disasterRepository.weeklyReport(oneWeekAgo);
 }
 
-async function getLatLongById(disasterId) {
-  return await disasterRepository.getLatLongById(disasterId);
+async function getLatLong() {
+  return await disasterRepository.getLatLong();
 }
 
 module.exports = {
@@ -101,5 +101,5 @@ module.exports = {
   addDiscussion,
   getDiscussionById,
   weeklyReport,
-  getLatLongById
+  getLatLong
 };

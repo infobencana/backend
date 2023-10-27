@@ -54,7 +54,6 @@ module.exports.GetListDisaster = async (req, res) => {
     if (status) {
       filter.status = status;
     }
-    console.log(req.query);
     const listDisaster = await disasterService.getListDisaster(filter);
     res.status(200).json({
       message: "OK",
@@ -315,19 +314,8 @@ module.exports.AddImage = async (req, res) => {
 module.exports.GetLatLong = async (req, res) => {
   try {
     logger.info("Getting latitude and longitude::");
-    const {
-      disasterId
-    } = req.params;
-    const existingDisaster = await disasterService.getDisasterById(disasterId);
 
-    if (!existingDisaster) {
-      return res.status(400).json({
-        status: false,
-        message: "Disaster not found",
-      });
-    }
-
-    const latlong = await disasterService.getLatLongById(disasterId);
+    const latlong = await disasterService.getLatLong();
     res.status(200).json({
       status: true,
       message: "OK",

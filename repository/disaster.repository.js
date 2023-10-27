@@ -321,27 +321,30 @@ async function weeklyReport(oneWeekAgo) {
   return result;
 }
 
-async function getLatLongById(disasterId) {
+async function getLatLong() {
   try {
     const latlong = await Disaster.aggregate([{
         $match: {
-          _id: new mongoose.Types.ObjectId(disasterId)
+          'detail.status': {
+            $in: ['waspada', 'darurat']
+          }
         }
       },
       {
         $addFields: {
           type: '$detail.type',
-          date: '$detail.date'
+          date: '$detail.date',
         }
       },
       {
         $project: {
           _id: 1,
-          name: 1,
           type: 1,
           date: 1,
+          victim: 1,
           latitude: 1,
-          longitude: 1
+          longitude: 1,
+          place: 1,
         }
       }
     ]);
@@ -365,5 +368,5 @@ module.exports = {
   addDiscussion,
   getDiscussionById,
   weeklyReport,
-  getLatLongById
+  getLatLong
 };
