@@ -81,7 +81,9 @@ async function getDiscussionById(disasterId) {
   return await disasterRepository.getDiscussionById(disasterId);
 }
 
-async function weeklyReport(oneWeekAgo) {
+async function weeklyReport() {
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
   return await disasterRepository.weeklyReport(oneWeekAgo);
 }
 

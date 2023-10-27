@@ -275,9 +275,7 @@ module.exports.GetDiscussById = async (req, res) => {
 module.exports.GetWeeklyReports = async (req, res) => {
   try {
     logger.info("Getting weekly reports");
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    const reports = await disasterService.weeklyReport(oneWeekAgo);
+    const reports = await disasterService.weeklyReport();
     res.status(200).json({
       status: true,
       message: "OK",
