@@ -39,16 +39,23 @@ module.exports.AddDisaster = async (req, res) => {
 
 module.exports.GetListDisaster = async (req, res) => {
   try {
-    const nameQuery = req.query.name || "";
-    const placeQuery = req.query.place || "";
-    const typeQuery = req.query.type || "";
-    const dateQuery = req.query.date || "";
-    const listDisaster = await disasterService.getListDisaster({
-      name: nameQuery,
-      place: placeQuery,
-      type: typeQuery,
-      date: dateQuery,
-    });
+    const {
+      search,
+      sort,
+      status
+    } = req.query;
+    const filter = {};
+    if (search) {
+      filter.search = search;
+    }
+    if (sort) {
+      filter.sort = sort;
+    }
+    if (status) {
+      filter.status = status;
+    }
+    console.log(req.query);
+    const listDisaster = await disasterService.getListDisaster(filter);
     res.status(200).json({
       message: "OK",
       success: true,
@@ -227,7 +234,6 @@ module.exports.AddDiscuss = async (req, res) => {
     } = req.params;
     const discussData = req.body;
     discussData.userId = req.user._id;
-    console.log(discussData);
     const discuss = await disasterService.addDiscussion(
       disasterId,
       discussData

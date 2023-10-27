@@ -34,23 +34,8 @@ async function publishDisaster(disasterData) {
   return disaster;
 }
 
-async function getListDisaster(queryParams) {
-  let query = {};
-
-  if (queryParams.name) {
-    query.name = { $regex: new RegExp(queryParams.name, "i") };
-  }
-  if (queryParams.place) {
-    query.place = { $regex: new RegExp(queryParams.place, "i") };
-  }
-  if (queryParams.type) {
-    query["detail.type"] = { $regex: new RegExp(queryParams.type, "i") };
-  }
-  if (queryParams.date) {
-    query["detail.date"] = queryParams.date;
-  }
-
-  return await disasterRepository.getListDisaster(query);
+async function getListDisaster(filter) {
+  return await disasterRepository.getListDisaster(filter);
 }
 
 async function addPeopleGone(disasterId, peopleData) {
@@ -74,7 +59,10 @@ async function deleteDisasterById(disasterId) {
 }
 
 async function updateDisasterById(disasterId, updateFields) {
-  const { discuss, ...validUpdateFields } = updateFields;
+  const {
+    discuss,
+    ...validUpdateFields
+  } = updateFields;
   return await disasterRepository.updateDisasterById(
     disasterId,
     validUpdateFields
@@ -93,7 +81,7 @@ async function getDiscussionById(disasterId) {
   return await disasterRepository.getDiscussionById(disasterId);
 }
 
-async function weeklyReport(oneWeekAgo){
+async function weeklyReport(oneWeekAgo) {
   return await disasterRepository.weeklyReport(oneWeekAgo);
 }
 
