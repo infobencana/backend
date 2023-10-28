@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Disaster = require("../model/disaster.model");
+const ReqMissingPeople = require("../model/reqmissingpeople.model");
 const logger = require("../logger/api.logger");
 
 async function addDisaster(disaster) {
@@ -15,7 +16,8 @@ async function addDisaster(disaster) {
 async function getListDisaster(filter) {
   let data = {};
   try {
-    const aggregationPipeline = [{
+    const aggregationPipeline = [
+      {
         $lookup: {
           from: "users",
           localField: "user_detail",
@@ -37,14 +39,20 @@ async function getListDisaster(filter) {
           people_gone: 1,
           user_detail: {
             name: {
-              $ifNull: [{
-                $arrayElemAt: ["$user.full_name", 0]
-              }, ""],
+              $ifNull: [
+                {
+                  $arrayElemAt: ["$user.full_name", 0],
+                },
+                "",
+              ],
             },
             picture: {
-              $ifNull: [{
-                $arrayElemAt: ["$user.photo_profile", 0]
-              }, ""],
+              $ifNull: [
+                {
+                  $arrayElemAt: ["$user.photo_profile", 0],
+                },
+                "",
+              ],
             },
           },
           timestamp: 1,
@@ -55,48 +63,49 @@ async function getListDisaster(filter) {
     if (filter.search) {
       aggregationPipeline.push({
         $match: {
-          $or: [{
+          $or: [
+            {
               name: {
                 $regex: filter.search,
-                $options: 'i'
-              }
+                $options: "i",
+              },
             },
             {
-              'detail.type': {
+              "detail.type": {
                 $regex: filter.search,
-                $options: 'i'
-              }
+                $options: "i",
+              },
             },
             {
-              'detail.place': {
+              "detail.place": {
                 $regex: filter.search,
-                $options: 'i'
-              }
+                $options: "i",
+              },
             },
           ],
         },
       });
     }
 
-    if (filter.sort === 'oldest') {
+    if (filter.sort === "oldest") {
       aggregationPipeline.push({
         $sort: {
-          timestamp: 1
-        }
+          timestamp: 1,
+        },
       });
     } else {
       aggregationPipeline.push({
         $sort: {
-          timestamp: -1
-        }
+          timestamp: -1,
+        },
       });
     }
 
     if (filter.status) {
       aggregationPipeline.push({
         $match: {
-          'detail.status': filter.status,
-        }
+          "detail.status": filter.status,
+        },
       });
     }
     data = await Disaster.aggregate(aggregationPipeline).exec();
@@ -135,7 +144,8 @@ async function updatePeopleGone(disasterId, personId, updateFields) {
 
 async function getDisasterById(disasterId) {
   try {
-    const disaster = await Disaster.aggregate([{
+    const disaster = await Disaster.aggregate([
+      {
         $match: {
           _id: new mongoose.Types.ObjectId(disasterId),
         },
@@ -162,14 +172,20 @@ async function getDisasterById(disasterId) {
           people_gone: 1,
           user_detail: {
             name: {
-              $ifNull: [{
-                $arrayElemAt: ["$user.full_name", 0]
-              }, ""],
+              $ifNull: [
+                {
+                  $arrayElemAt: ["$user.full_name", 0],
+                },
+                "",
+              ],
             },
             picture: {
-              $ifNull: [{
-                $arrayElemAt: ["$user.photo_profile", 0]
-              }, ""],
+              $ifNull: [
+                {
+                  $arrayElemAt: ["$user.photo_profile", 0],
+                },
+                "",
+              ],
             },
           },
           timestamp: 1,
@@ -186,7 +202,19 @@ async function getDisasterById(disasterId) {
 
 async function deleteDisasterById(disasterId) {
   try {
-    return await Disaster.findByIdAndDelete(disasterId);
+    const disaster = await Disaster.findByIdAndDelete(disasterId);
+
+    const bencanaId = disaster._id;
+
+    const reqMissingPeople = await ReqMissingPeople.find({
+      bencana_id: bencanaId,
+    });
+
+    if (reqMissingPeople.length > 0) {
+      await ReqMissingPeople.deleteMany({ bencana_id: bencanaId });
+    }
+
+    return disaster;
   } catch (error) {
     throw error;
   }
@@ -227,6 +255,16 @@ async function deletePeopleGone(disasterId, personId) {
     throw new Error("Person not found");
   }
 
+  const missingPeopleId = person._id;
+
+  const reqMissingPeople = await ReqMissingPeople.find({
+    missing_people_id: missingPeopleId,
+  });
+
+  if (reqMissingPeople.length > 0) {
+    await ReqMissingPeople.deleteMany({ missing_people_id: missingPeopleId });
+  }
+
   disaster.people_gone.pull({
     _id: personId,
   });
@@ -248,35 +286,36 @@ async function addDiscussion(disasterId, disscussData) {
 
 async function getDiscussionById(disasterId) {
   try {
-    const result = await Disaster.aggregate([{
+    const result = await Disaster.aggregate([
+      {
         $match: {
-          _id: new mongoose.Types.ObjectId(disasterId)
-        }
+          _id: new mongoose.Types.ObjectId(disasterId),
+        },
       },
       {
-        $unwind: '$discuss'
+        $unwind: "$discuss",
       },
       {
         $lookup: {
-          from: 'users',
-          localField: 'discuss.userId',
-          foreignField: '_id',
-          as: 'user'
-        }
+          from: "users",
+          localField: "discuss.userId",
+          foreignField: "_id",
+          as: "user",
+        },
       },
       {
-        $unwind: '$user'
+        $unwind: "$user",
       },
       {
         $project: {
-          _id: '$discuss._id',
-          full_name: '$user.full_name',
-          photo_profile: '$user.photo_profile',
-          role: '$user.role',
-          comment: '$discuss.comment',
-          timestamp: '$discuss.timestamp'
-        }
-      }
+          _id: "$discuss._id",
+          full_name: "$user.full_name",
+          photo_profile: "$user.photo_profile",
+          role: "$user.role",
+          comment: "$discuss.comment",
+          timestamp: "$discuss.timestamp",
+        },
+      },
     ]).exec();
     return result;
   } catch (error) {
@@ -286,7 +325,8 @@ async function getDiscussionById(disasterId) {
 }
 
 async function weeklyReport(oneWeekAgo) {
-  const result = await Disaster.aggregate([{
+  const result = await Disaster.aggregate([
+    {
       $match: {
         timestamp: {
           $gte: oneWeekAgo,
@@ -323,19 +363,20 @@ async function weeklyReport(oneWeekAgo) {
 
 async function getLatLong() {
   try {
-    const latlong = await Disaster.aggregate([{
+    const latlong = await Disaster.aggregate([
+      {
         $match: {
-          'detail.status': {
-            $in: ['waspada', 'darurat']
-          }
-        }
+          "detail.status": {
+            $in: ["waspada", "darurat"],
+          },
+        },
       },
       {
         $addFields: {
-          type: '$detail.type',
-          status: '$detail.status',
-          date: '$detail.date',
-        }
+          type: "$detail.type",
+          status: "$detail.status",
+          date: "$detail.date",
+        },
       },
       {
         $project: {
@@ -347,11 +388,10 @@ async function getLatLong() {
           latitude: 1,
           longitude: 1,
           place: 1,
-        }
-      }
+        },
+      },
     ]);
     return latlong;
-
   } catch (error) {
     logger.error(error.message);
     throw error;
@@ -370,5 +410,5 @@ module.exports = {
   addDiscussion,
   getDiscussionById,
   weeklyReport,
-  getLatLong
+  getLatLong,
 };
