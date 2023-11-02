@@ -17,6 +17,6 @@ RUN pnpm install
 COPY . .
 
 # Port used by Express.js
-EXPOSE 8080
+EXPOSE 4000
 
 CMD ["pnpm", "start"]
