@@ -108,3 +108,67 @@ Run project
 - userId: ObjectId
 - comment: String
 - timestamp: Date
+
+
+## API Reference
+
+#### Register
+
+```http
+  POST /signup
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `full_name` `email` `password` | `false` | - |
+
+#### Login
+
+```http
+  POST /login
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `email` `password` | `false` | - |
+
+#### Profile
+
+```http
+  GET /profile
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| - | `true` | - |
+
+#### Update Profile
+
+```http
+  PUT /profile
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `full_name` `phone_number` `gender` `photo_profile` | `true` | - |
+
+#### Upload Photo Profile
+
+```http
+  POST /profile/upload_photo
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `photo_profile` | `true` | - |
+
+#### List Disaster
+
+```http
+  GET /disaster
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| - | `false` | `search` `sort` `status` |
+
