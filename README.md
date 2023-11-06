@@ -172,3 +172,112 @@ Run project
 | :-------- | :--------- | :---------- |
 | - | `false` | `search` `sort` `status` |
 
+#### Add Disaster
+
+```http
+  POST /disaster
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `name` `victim` `latitude` `longitude` `place` `donations` `picture` `detail` `people_gone` | `true` | - |
+
+#### Update Disaster
+
+```http
+  PUT /disaster/{id}
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `name` `victim` `latitude` `longitude` `place` `donations` `picture` `detail` `people_gone` | `true` | - |
+
+#### Delete Disaster
+
+```http
+  DELETE /disaster/{id_disaster}
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| - | `true` | - |
+
+#### Disaster by Id
+
+```http
+  GET /disaster/{id_disaster}
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| - | `true` | - |
+
+#### Add New Missing People
+
+```http
+  POST /disaster/{id_disaster}/people_gone
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `name` `status` `gender` `weight` `height` `age` `address` `last_seen` | `true` | - |
+
+#### Delete Missing People
+
+```http
+  DELETE /disaster/{id_disaster}/people_gone/{id_people_gone}
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| - | `true` | - |
+
+#### Weekly Report
+
+```http
+  GET /disaster/weekly_report
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| - | `true` | - |
+
+#### Add Discuss
+
+```http
+  POST /disaster/{id_disaster}/discuss
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `comment` | `true` | - |
+
+#### Show Discuss
+
+```http
+  GET /disaster/{id_disaster}/discuss
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| - | `true` | - |
+
+#### Add Image
+
+```http
+  POST /disaster/image
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| `picture` | `true` | - |
+
+#### Show Location
+
+```http
+  GET /disaster/lat_long
+```
+
+| Body | Need token | Query |
+| :-------- | :--------- | :---------- |
+| - | `false` | - |
